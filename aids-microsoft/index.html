@@ -316,7 +316,7 @@ function render() {
   /* band headers */
   svg.appendChild(txt({ x: M.l - 38, y: bandA[0] + 13, "font-size": 11, "font-weight": 600, fill: "var(--aids)", "letter-spacing": ".06em" }, "AIDS EPIDEMIC"));
   svg.appendChild(txt({ x: M.l - 38, y: bandC + 3.5, "font-size": 10.5, "font-weight": 600, fill: "var(--conv)", "letter-spacing": ".06em" }, "WHERE THEY MEET"));
-  svg.appendChild(txt({ x: M.l - 38, y: bandM[0] + 13, "font-size": 11, "font-weight": 600, fill: "var(--msprod)", "letter-spacing": ".06em" }, "MICROSOFT"));
+  svg.appendChild(txt({ x: M.l - 38, y: bandM[1] - 7, "font-size": 11, "font-weight": 600, fill: "var(--msprod)", "letter-spacing": ".06em" }, "MICROSOFT"));
   svg.appendChild(el("line", { x1: M.l + 80, y1: bandC, x2: W - M.r, y2: bandC, stroke: "var(--conv)", "stroke-width": 1, opacity: .35, "stroke-dasharray": "3 4" }));
 
   /* charts */
@@ -392,7 +392,8 @@ function render() {
     if (labelsOn) {
       var g = el("g", { opacity: e.y <= year + 0.001 ? 1 : .18, cursor: "pointer" });
       var short = ["Gates Foundation", "Global Fund pledge", "Buffett gift"][i] || e.name;
-      g.appendChild(txt({ x: p.x, y: bandC - 11, "text-anchor": "middle", "font-size": 10.5, "font-weight": 600, fill: "var(--conv)" }, short + " · " + e.m));
+      var ly = (i % 2) ? bandC + 20 : bandC - 11;
+      g.appendChild(txt({ x: p.x, y: ly, "text-anchor": "middle", "font-size": 10.5, "font-weight": 600, fill: "var(--conv)" }, short + " · " + e.m));
       g.addEventListener("click", function () { selectEvent(e, true); });
       g.addEventListener("pointermove", function (ev) { showTip(ev, e); });
       g.addEventListener("pointerleave", hideTip);
