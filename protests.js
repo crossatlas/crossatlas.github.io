@@ -1,7 +1,7 @@
 /* Protests, riots and revolts: Europe, the United States and the Roman Mediterranean, AD 60 to October 2026.
    Shared by the Cross and Crescent Atlas and the Protest Tracker.
    Each entry: id, name, place, start/end ("YYYY", "YYYY-MM" or "YYYY-MM-DD"), lat, lon,
-   region ("Europe" | "United States" | "Mediterranean"), level ("violent" | "clash" | "peaceful"),
+   region ("Europe" | "United States" | "Canada" | "Middle East" | "Latin America" | "Asia" | "Africa" | "Oceania" | "Mediterranean"), level ("violent" | "clash" | "peaceful"),
    what, cause, links [[outlet, title, url, isVideo]].
    Links without a URL point to a Wikipedia search for the entry's name. */
 window.PROTESTS = (function () {
@@ -554,6 +554,178 @@ window.PROTESTS = (function () {
   L({ id: "g20hamburg", name: "G20 Hamburg riots", place: "Hamburg, Germany", start: "2017-07", lat: 53.55, lon: 9.99, region: "Europe", level: "violent", cats: [],
       what: "'Welcome to Hell' protests turned into riots; hundreds of police were injured and the Schanzenviertel was looted.", cause: "Anti-capitalist opposition to the G20 summit.", wiki: "Protests against the 2017 G20 Hamburg summit" });
 
+
+  /* ---------------- Added October 2026: filling the 2003 to 2026 gaps (Middle East, Asia, Africa, Latin America, Canada, Europe) ---------------- */
+  // 2003 to 2009
+  add({ id: "rose2003", name: "Rose Revolution", place: "Tbilisi, Georgia", start: "2003-11-02", end: "2003-11-23", lat: 41.69, lon: 44.8, region: "Europe", level: "peaceful", crowd: "Tens of thousands in Tbilisi",
+        what: "Protesters carrying roses stormed parliament after a rigged election; President Shevardnadze resigned without bloodshed.", cause: "Election fraud and corruption." });
+  add({ id: "orange2004", name: "Orange Revolution", place: "Kyiv, Ukraine", start: "2004-11-22", end: "2005-01-23", lat: 50.45, lon: 30.52, region: "Europe", level: "peaceful", crowd: "Hundreds of thousands on Independence Square; some estimates up to 1 million at the peak",
+        what: "Weeks of street protests overturned a fraudulent presidential runoff; the Supreme Court ordered a rerun, which Viktor Yushchenko won.", cause: "Election fraud." });
+  add({ id: "tulip2005", name: "Tulip Revolution", place: "Bishkek, Kyrgyzstan", start: "2005-03-24", lat: 42.87, lon: 74.59, region: "Asia", level: "clash", crowd: "About 10,000 or more stormed the government building",
+        what: "Protesters seized the government headquarters and President Akayev fled the country; looting followed.", cause: "Disputed parliamentary election and corruption." });
+  add({ id: "saffron2007", name: "Saffron Revolution", place: "Yangon, Myanmar", start: "2007-08-15", end: "2007-09-29", lat: 16.84, lon: 96.17, region: "Asia", level: "violent", crowd: "Up to about 100,000 marchers led by Buddhist monks; the UN counted at least 31 killed",
+        what: "Monks led marches against the military junta; troops raided monasteries and fired on crowds.", cause: "Sudden fuel price rises under military rule." });
+  add({ id: "kenya2007", name: "Kenyan post-election violence", place: "Nairobi and the Rift Valley, Kenya", start: "2007-12-30", end: "2008-02-28", lat: -1.29, lon: 36.82, region: "Africa", level: "violent", crowd: "About 1,100 killed and 600,000 displaced",
+        what: "Protests over a disputed election turned into ethnic killings; a power-sharing deal ended the crisis.", cause: "Disputed presidential election.", xq: "Kenya violence" });
+  add({ id: "iran2009", name: "Green Movement", place: "Tehran, Iran", start: "2009-06-13", end: "2010-02", lat: 35.69, lon: 51.39, region: "Middle East", level: "violent", crowd: "Up to 3 million in Tehran on June 15, 2009 (estimate attributed to Tehran's mayor); dozens killed",
+        what: "Millions protested President Ahmadinejad's re-election; the regime crushed the movement with mass arrests. The killing of Neda Agha-Soltan was filmed and seen worldwide.", cause: "Disputed presidential election.", wiki: "2009 Iranian presidential election protests", xq: "Iran election (protest OR Tehran)" });
+
+  // 2010 to 2013: the Arab Spring and after
+  add({ id: "thailand2010", name: "Red Shirt protests and crackdown", place: "Bangkok, Thailand", start: "2010-03-12", end: "2010-05-19", lat: 13.74, lon: 100.54, region: "Asia", level: "violent", crowd: "About 100,000 at the peak; about 90 killed",
+        what: "Supporters of ousted prime minister Thaksin occupied central Bangkok for two months until the army cleared the camp.", cause: "Demands for new elections.", wiki: "2010 Thai political protests" });
+  add({ id: "tunisia2010", name: "Tunisian Revolution", place: "Sidi Bouzid and Tunis, Tunisia", start: "2010-12-17", end: "2011-01-14", lat: 36.8, lon: 10.18, region: "Africa", level: "violent", cats: ["costofliving"], crowd: "Tens of thousands in Tunis on January 14, 2011; about 300 killed",
+        what: "A street vendor's self-immolation set off protests that toppled President Ben Ali after 23 years and launched the Arab Spring.", cause: "Unemployment, police abuse and dictatorship.", xq: "Tunisia (protest OR revolution)" });
+  add({ id: "egypt2011", name: "Egyptian revolution (Tahrir Square)", place: "Cairo, Egypt", start: "2011-01-25", end: "2011-02-11", lat: 30.04, lon: 31.24, region: "Africa", level: "violent", crowd: "Hundreds of thousands in Tahrir Square at the peak; about 846 killed (government fact-finding report)",
+        what: "Eighteen days of mass protest forced President Mubarak to resign after 30 years.", cause: "Police brutality, corruption and dictatorship.", wiki: "Egyptian revolution of 2011", xq: "Tahrir" });
+  add({ id: "bahrain2011", name: "Bahraini uprising", place: "Manama, Bahrain", start: "2011-02-14", end: "2011-03-18", lat: 26.23, lon: 50.57, region: "Middle East", level: "violent", crowd: "Over 100,000 at the largest march, in a country of about 600,000 citizens",
+        what: "Mostly Shia protesters camped at the Pearl Roundabout; Saudi-led troops entered and the camp was crushed.", cause: "Demands for political reform from the Sunni monarchy." });
+  add({ id: "libya2011", name: "Libyan uprising", place: "Benghazi, Libya", start: "2011-02-15", end: "2011-10-20", lat: 32.12, lon: 20.07, region: "Africa", level: "violent", crowd: "Thousands at the first Benghazi protests; the war that followed killed many thousands",
+        what: "Protests in Benghazi became a civil war; with NATO air support the rebels captured Tripoli, and Gaddafi was killed in October.", cause: "Revolt against Gaddafi's 42-year rule.", wiki: "Libyan civil war (2011)", xq: "Benghazi OR Libya" });
+  add({ id: "yemen2011", name: "Yemeni revolution", place: "Sanaa, Yemen", start: "2011-01-27", end: "2012-02-27", lat: 15.37, lon: 44.19, region: "Middle East", level: "violent", crowd: "Hundreds of thousands at Change Square; about 2,000 killed",
+        what: "A year of protests forced President Saleh to hand over power; the country later slid into civil war.", cause: "Poverty, corruption and dictatorship.", wiki: "Yemeni revolution" });
+  add({ id: "syria2011", name: "Syrian uprising", place: "Daraa, Syria", start: "2011-03-15", end: "2011-07", lat: 32.62, lon: 36.1, region: "Middle East", level: "violent", crowd: "Tens of thousands; the civil war that followed killed over 500,000 people",
+        what: "After teenagers were tortured for anti-regime graffiti, protests spread nationwide; Assad's forces opened fire and the uprising became a civil war. Assad fell in December 2024.", cause: "Dictatorship and police brutality.", wiki: "Syrian revolution", xq: "Syria (protest OR Daraa)" });
+  add({ id: "russia2011", name: "Bolotnaya Square protests", place: "Moscow, Russia", start: "2011-12-10", end: "2012-05-06", lat: 55.74, lon: 37.61, region: "Europe", level: "clash", crowd: "About 50,000 to 100,000 at the largest rallies (December 2011)",
+        what: "Russia's biggest protests since the 1990s; the May 6, 2012 rally ended in clashes and prison sentences.", cause: "Election fraud and Putin's return to the presidency.", wiki: "2011–2013 Russian protests" });
+  L({ id: "quebec2012", name: "Quebec student strike (Maple Spring)", place: "Montreal, Quebec", start: "2012-02-13", end: "2012-09", lat: 45.5, lon: -73.57, region: "Canada", level: "clash", crowd: "About 200,000 or more on March 22 and May 22, 2012",
+      what: "Students struck for months; nightly marches with pots and pans followed an emergency law limiting protests. The tuition hike was cancelled.", cause: "Tuition increases.", wiki: "2012 Quebec student protests", xq: "Montreal (manif OR protest)" });
+  add({ id: "brazil2013", name: "Brazil's June protests", place: "São Paulo and Rio de Janeiro, Brazil", start: "2013-06-06", end: "2013-07", lat: -23.55, lon: -46.63, region: "Latin America", level: "clash", cats: ["costofliving"], crowd: "Over 1 million across 100+ cities on June 20, 2013",
+        what: "A bus-fare protest grew into the country's largest demonstrations in decades.", cause: "Fares, corruption and World Cup spending.", wiki: "2013 protests in Brazil", xq: "Brazil protest" });
+  add({ id: "gezi2013", name: "Gezi Park protests", place: "Istanbul, Turkey", start: "2013-05-28", end: "2013-08", lat: 41.04, lon: 28.99, region: "Europe", level: "clash", crowd: "About 2.5 million took part nationwide (Interior Ministry); several killed and thousands injured",
+        what: "A sit-in to save a park grew into nationwide protests against Erdoğan; police used tear gas and water cannon on a massive scale.", cause: "Redevelopment of Gezi Park and authoritarianism.", xq: "Gezi OR Taksim" });
+  add({ id: "rabaa2013", name: "Rabaa sit-in dispersal", place: "Cairo, Egypt", start: "2013-08-14", lat: 30.07, lon: 31.32, region: "Africa", level: "violent", crowd: "Tens of thousands at the camps; at least 817 killed in one day (Human Rights Watch)",
+        what: "Security forces cleared camps of supporters of ousted Islamist president Morsi, in one of the largest killings of protesters in one day in modern history.", cause: "Protest against the July 2013 military coup.", wiki: "August 2013 Rabaa massacre", xq: "Rabaa" });
+  add({ id: "umbrella2014", name: "Umbrella Movement", place: "Hong Kong", start: "2014-09-26", end: "2014-12-15", lat: 22.28, lon: 114.16, region: "Asia", level: "clash", crowd: "Over 100,000 at the peak",
+        what: "Protesters occupied main roads for 79 days, using umbrellas against pepper spray.", cause: "Beijing's limits on free elections.", xq: "\"Occupy Central\" OR \"Hong Kong\" protest" });
+  add({ id: "venezuela2014", name: "Venezuelan protests", place: "Caracas, Venezuela", start: "2014-02-12", end: "2014-06", lat: 10.49, lon: -66.88, region: "Latin America", level: "violent", cats: ["antisocialist"], crowd: "Tens of thousands; 43 killed",
+        what: "Students and the opposition protested against President Maduro's socialist government; opposition leader Leopoldo López was jailed.", cause: "Inflation, shortages, crime and repression.", wiki: "2014 Venezuelan protests", xq: "Venezuela (protesta OR protest)" });
+  L({ id: "standingrock", name: "Standing Rock pipeline protests", place: "Cannon Ball, North Dakota", start: "2016-04", end: "2017-02-23", lat: 46.4, lon: -100.6, region: "United States", level: "clash", crowd: "Up to about 10,000 in the camps at the peak",
+      what: "The Standing Rock Sioux and allies camped for months to stop the Dakota Access Pipeline; police used water cannon in freezing weather. The pipeline was finished in 2017.", cause: "Pipeline under the tribe's water supply and burial grounds.", wiki: "Dakota Access Pipeline protests", xq: "\"Standing Rock\" OR #NoDAPL" });
+  L({ id: "womensmarch2017", name: "Women's March", place: "Washington, D.C.", start: "2017-01-21", lat: 38.89, lon: -77.02, region: "United States", level: "peaceful", crowd: "3.3 to 5.2 million nationwide (Chenoweth and Pressman); about 470,000 in Washington (crowd scientists)",
+      what: "The day after Trump's inauguration, one of the largest single-day protests in U.S. history.", cause: "Opposition to the new Trump administration; women's rights.", wiki: "2017 Women's March", xq: "\"Women's March\"" });
+  add({ id: "venezuela2017", name: "Venezuelan protests of 2017", place: "Caracas, Venezuela", start: "2017-04-04", end: "2017-07", lat: 10.49, lon: -66.88, region: "Latin America", level: "violent", cats: ["antisocialist"], crowd: "Hundreds of thousands at the largest marches; about 125 killed",
+        what: "Four months of daily protests after the Supreme Court tried to take over the opposition-led National Assembly.", cause: "Economic collapse and Maduro's power grab.", wiki: "2017 Venezuelan protests", xq: "Venezuela (protesta OR protest)" });
+  add({ id: "iran2017", name: "Iranian protests of 2017 and 2018", place: "Mashhad and Tehran, Iran", start: "2017-12-28", end: "2018-01-07", lat: 36.3, lon: 59.6, region: "Middle East", level: "violent", cats: ["costofliving"], crowd: "Thousands in dozens of cities; about 21 to 25 killed, nearly 5,000 arrested",
+        what: "Protests over prices spread to more than 80 cities, with chants against the Supreme Leader.", cause: "Prices, unemployment and corruption.", wiki: "2017–2018 Iranian protests", xq: "Iran protest" });
+
+  // 2018
+  add({ id: "gaza2018", name: "Great March of Return", place: "Gaza border fence", start: "2018-03-30", end: "2019-12-27", lat: 31.42, lon: 34.36, region: "Middle East", level: "violent", cats: ["palestine"], crowd: "Tens of thousands at the largest Friday protests; about 214 Palestinians killed (UN)",
+        what: "Weekly protests along the Gaza fence; Israeli snipers shot thousands, and Israel said Hamas used the protests as cover for attacks.", cause: "Right of return for refugees and the blockade of Gaza.", wiki: "2018–2019 Gaza border protests", xq: "Gaza (\"March of Return\" OR border protest)" });
+  add({ id: "armenia2018", name: "Armenian Velvet Revolution", place: "Yerevan, Armenia", start: "2018-04-13", end: "2018-05-08", lat: 40.18, lon: 44.51, region: "Europe", level: "peaceful", crowd: "About 100,000 or more in Yerevan at the peak",
+        what: "Peaceful mass civil disobedience forced Serzh Sargsyan to resign; protest leader Nikol Pashinyan became prime minister.", cause: "Sargsyan's attempt to stay in power as prime minister.", wiki: "2018 Armenian revolution", xq: "Yerevan OR Pashinyan" });
+  add({ id: "nicaragua2018", name: "Nicaraguan protests", place: "Managua, Nicaragua", start: "2018-04-18", end: "2018-07", lat: 12.13, lon: -86.25, region: "Latin America", level: "violent", cats: ["antisocialist"], crowd: "Hundreds of thousands at the largest marches; over 300 killed (Inter-American Commission on Human Rights)",
+        what: "Protests against Daniel Ortega's Sandinista government were crushed by police and armed pro-government groups.", cause: "Social security cuts, then repression.", wiki: "2018–2022 Nicaraguan protests", xq: "Nicaragua (protesta OR protest)" });
+  add({ id: "sudan2019", name: "Sudanese revolution", place: "Khartoum, Sudan", start: "2018-12-19", end: "2019-08-17", lat: 15.5, lon: 32.56, region: "Africa", level: "violent", cats: ["costofliving"], crowd: "Hundreds of thousands at the army headquarters sit-in; over 100 killed in the June 3 Khartoum massacre",
+        what: "Protests over bread prices forced the army to oust Omar al-Bashir after 30 years; a power-sharing deal followed the June 3 massacre.", cause: "Bread and fuel prices; dictatorship.", wiki: "Sudanese revolution", xq: "Sudan (protest OR Khartoum)" });
+
+  // 2019: one of the biggest protest years on record
+  add({ id: "algeria2019", name: "Hirak movement", place: "Algiers, Algeria", start: "2019-02-22", end: "2021-05", lat: 36.75, lon: 3.06, region: "Africa", level: "peaceful", crowd: "Hundreds of thousands to millions every Friday at the peak (no official count)",
+        what: "Weekly peaceful marches forced President Bouteflika to drop his bid for a fifth term and resign.", cause: "Bouteflika's fifth-term bid and military rule.", wiki: "2019–2021 Algerian protests", xq: "Algeria OR Hirak" });
+  L({ id: "xr2019", name: "Extinction Rebellion occupations", place: "London, England", start: "2019-04-15", end: "2019-10-19", lat: 51.51, lon: -0.13, region: "Europe", level: "peaceful", crowd: "About 1,130 arrests in April and about 1,800 in October (Metropolitan Police)",
+      what: "Climate activists blocked bridges and central London for days with a pink boat at Oxford Circus.", cause: "Climate change.", wiki: "Extinction Rebellion", xq: "\"Extinction Rebellion\" London" });
+  add({ id: "hk2019", name: "Hong Kong protests of 2019 and 2020", place: "Hong Kong", start: "2019-06-09", end: "2020-06", lat: 22.28, lon: 114.16, region: "Asia", level: "violent", crowd: "June 16, 2019: about 2 million (organizers); 338,000 at the peak of the route (police). Over 10,000 arrested by 2020",
+        what: "Marches against an extradition bill grew into a year of protest; the legislature was stormed, universities were besieged and the bill was withdrawn. Beijing imposed a national security law in June 2020.", cause: "Extradition to mainland China; loss of freedoms.", wiki: "2019–2020 Hong Kong protests", xq: "\"Hong Kong\" protest" });
+  L({ id: "climatestrike2019", name: "Global Climate Strike", place: "New York City and worldwide", start: "2019-09-20", end: "2019-09-27", lat: 40.71, lon: -74.0, region: "United States", level: "peaceful", crowd: "About 4 million on September 20 (organizers); 6 to 7.6 million over the week",
+      what: "Students and workers in about 150 countries walked out; Greta Thunberg addressed about 250,000 in New York.", cause: "Climate change.", wiki: "September 2019 climate strikes", xq: "\"climate strike\"" });
+  add({ id: "farmers2019", name: "Dutch farmers' tractor protest", place: "The Hague, Netherlands", start: "2019-10-01", lat: 52.08, lon: 4.3, region: "Europe", level: "peaceful", crowd: "About 2,200 tractors; record traffic jams",
+        what: "Farmers drove tractors into The Hague against nitrogen-emission rules.", cause: "Nitrogen limits that threatened livestock farms.", wiki: "Dutch farmers' protests", xq: "boerenprotest OR farmers Hague" });
+  add({ id: "iraq2019", name: "Tishreen (October) protests", place: "Baghdad, Iraq", start: "2019-10-01", end: "2020-10", lat: 33.31, lon: 44.37, region: "Middle East", level: "violent", cats: ["costofliving"], crowd: "Hundreds of thousands at Tahrir Square; about 600 killed",
+        what: "Young Iraqis protested for months; security forces and militias shot hundreds, and the prime minister resigned.", cause: "Unemployment, corruption and Iranian influence.", wiki: "2019–2021 Iraqi protests", xq: "Iraq (protest OR Baghdad)" });
+  add({ id: "ecuador2019", name: "Ecuador fuel protests", place: "Quito, Ecuador", start: "2019-10-03", end: "2019-10-13", lat: -0.18, lon: -78.47, region: "Latin America", level: "violent", cats: ["costofliving"], crowd: "Tens of thousands, led by Indigenous groups; 11 killed (ombudsman)",
+        what: "Indigenous marchers occupied Quito and the government moved out of the capital until fuel subsidies were restored.", cause: "End of fuel subsidies.", wiki: "2019 Ecuadorian protests", xq: "Quito OR Ecuador protest" });
+  add({ id: "catalonia2019", name: "Catalan sentencing riots", place: "Barcelona, Spain", start: "2019-10-14", end: "2019-10-26", lat: 41.39, lon: 2.17, region: "Europe", level: "violent", crowd: "About 525,000 on October 18 (Barcelona city police)",
+        what: "Long prison sentences for independence leaders set off a week of protests; the airport was blockaded and streets burned.", cause: "Sentencing of Catalan independence leaders.", wiki: "2019–2020 Catalan protests", xq: "Barcelona (protest OR disturbios)" });
+  add({ id: "lebanon2019", name: "17 October Revolution", place: "Beirut, Lebanon", start: "2019-10-17", end: "2020-03", lat: 33.89, lon: 35.5, region: "Middle East", level: "clash", cats: ["costofliving"], crowd: "Over 1 million nationwide on October 20 (widely reported; no official count)",
+        what: "A tax on WhatsApp calls set off nationwide protests across religious lines; Prime Minister Hariri resigned.", cause: "Taxes, corruption and economic collapse.", wiki: "2019–2021 Lebanese protests", xq: "Lebanon (protest OR Beirut)" });
+  add({ id: "bolivia2019", name: "Bolivian political crisis", place: "La Paz, Bolivia", start: "2019-10-21", end: "2019-11-24", lat: -16.5, lon: -68.15, region: "Latin America", level: "violent", crowd: "Tens of thousands on both sides; about 36 killed, including at Sacaba and Senkata",
+        what: "Protests over a disputed vote forced socialist president Evo Morales to resign after the army urged him to; his supporters then protested and many were killed.", cause: "Disputed election.", wiki: "2019 Bolivian political crisis", xq: "Bolivia (protesta OR protest)" });
+  add({ id: "iran2019", name: "Bloody Aban (fuel protests)", place: "Tehran and across Iran", start: "2019-11-15", end: "2019-11-18", lat: 35.69, lon: 51.39, region: "Middle East", level: "violent", cats: ["costofliving"], crowd: "Over 300 killed (Amnesty International); Reuters reported about 1,500",
+        what: "A sudden fuel price rise set off protests in over 100 cities; the internet was shut off and security forces shot protesters.", cause: "Fuel price increase.", wiki: "2019–2020 Iranian protests", xq: "Iran protest" });
+  L({ id: "colombia2019", name: "Colombian national strike", place: "Bogotá, Colombia", start: "2019-11-21", end: "2019-12", lat: 4.71, lon: -74.07, region: "Latin America", level: "clash", crowd: "About 200,000 or more nationwide on November 21 (government estimate)",
+      what: "Unions and students called a national strike; a protester, Dilan Cruz, was killed by riot police.", cause: "Economic policy, pensions and violence against social leaders.", wiki: "2019–2020 Colombian protests", xq: "Colombia paro" });
+  add({ id: "india2019", name: "Citizenship Act protests and Delhi riots", place: "New Delhi, India", start: "2019-12-04", end: "2020-03", lat: 28.61, lon: 77.21, region: "Asia", level: "violent", crowd: "Hundreds of thousands nationwide; 53 killed in the February 2020 Delhi riots",
+        what: "Months of protests, including a women's sit-in at Shaheen Bagh, ended after deadly religious riots in northeast Delhi.", cause: "A citizenship law critics said excluded Muslims.", wiki: "Citizenship Amendment Act protests", xq: "CAA protest" });
+
+  // 2020 to 2021
+  L({ id: "poland2020", name: "Women's Strike", place: "Warsaw, Poland", start: "2020-10-22", end: "2020-12", lat: 52.23, lon: 21.01, region: "Europe", level: "peaceful", crowd: "About 430,000 nationwide on October 28 (police)",
+      what: "Poland's largest protests since 1989 after a court ruling banned almost all abortions.", cause: "Constitutional Tribunal ruling on abortion.", wiki: "October 2020 Polish protests", xq: "\"Strajk Kobiet\" OR Poland protest" });
+  add({ id: "thailand2020", name: "Thai youth protests", place: "Bangkok, Thailand", start: "2020-07-18", end: "2021-03", lat: 13.76, lon: 100.5, region: "Asia", level: "clash", crowd: "About 20,000 to 30,000 at the largest rallies",
+        what: "Students openly called for reform of the monarchy, a taboo in Thailand; leaders were charged with royal insult.", cause: "Military-backed government and the monarchy's power.", wiki: "2020–2021 Thai protests", xq: "Bangkok protest" });
+  add({ id: "endsars2020", name: "#EndSARS protests", place: "Lagos, Nigeria", start: "2020-10-08", end: "2020-10-20", lat: 6.43, lon: 3.42, region: "Africa", level: "violent", crowd: "Tens of thousands; at least 12 killed at the Lekki toll gate (Amnesty International)",
+        what: "Youth protests against a police unit; soldiers opened fire on protesters at the Lekki toll gate on October 20.", cause: "Police brutality by the SARS unit.", wiki: "End SARS", xq: "#EndSARS" });
+  L({ id: "indiafarmers2020", name: "Indian farmers' protest", place: "Delhi borders, India", start: "2020-11-26", end: "2021-12-11", lat: 28.84, lon: 77.09, region: "Asia", level: "clash", crowd: "Hundreds of thousands camped on Delhi's borders; violence at the Red Fort on January 26, 2021",
+      what: "Farmers blockaded Delhi for over a year until the government repealed three farm laws.", cause: "Farm laws farmers feared would end price guarantees.", wiki: "2020–2021 Indian farmers' protest", xq: "farmers protest Delhi" });
+  add({ id: "dutch2021", name: "Dutch curfew riots", place: "Rotterdam, Eindhoven and other Dutch cities", start: "2021-01-23", end: "2021-01-26", lat: 51.92, lon: 4.48, region: "Europe", level: "violent", crowd: "Hundreds of rioters each night; over 500 arrests",
+        what: "The worst Dutch riots in decades after a COVID curfew; a coronavirus test center was burned.", cause: "COVID-19 curfew.", wiki: "Dutch curfew riots", xq: "rellen avondklok OR \"curfew riots\"" });
+  add({ id: "myanmar2021", name: "Myanmar anti-coup protests", place: "Yangon, Myanmar", start: "2021-02-06", end: "2021-12", lat: 16.84, lon: 96.17, region: "Asia", level: "violent", crowd: "Hundreds of thousands at the peak; about 1,300 killed in 2021 (rights group AAPP)",
+        what: "Mass protests and strikes followed the military coup of February 1; the army shot protesters and the conflict became a civil war.", cause: "Military coup.", wiki: "Myanmar protests (2021–present)", xq: "Myanmar protest" });
+  L({ id: "colombia2021", name: "Colombian national strike of 2021", place: "Cali and Bogotá, Colombia", start: "2021-04-28", end: "2021-06", lat: 3.45, lon: -76.53, region: "Latin America", level: "violent", cats: ["costofliving"], crowd: "Hundreds of thousands; about 46 killed (UN human rights office)",
+      what: "A tax-reform protest grew into weeks of road blockades and deadly police violence, especially in Cali.", cause: "Tax reform and poverty after COVID.", wiki: "2021 Colombian protests", xq: "\"paro nacional\" Colombia" });
+  add({ id: "cuba2021", name: "Cuban protests (11J)", place: "Havana and San Antonio de los Baños, Cuba", start: "2021-07-11", end: "2021-07-12", lat: 23.13, lon: -82.38, region: "Latin America", level: "clash", cats: ["antisocialist"], crowd: "Thousands in 40+ towns; about 1,400 detained (rights groups); 1 killed",
+        what: "The largest protests since the 1959 revolution, with chants of 'Patria y Vida'; many protesters got long prison sentences.", cause: "Food and medicine shortages, blackouts and Communist rule.", wiki: "2021 Cuban protests", xq: "#SOSCuba OR Cuba protest" });
+  add({ id: "southafrica2021", name: "South African unrest", place: "Durban and Johannesburg, South Africa", start: "2021-07-09", end: "2021-07-18", lat: -29.86, lon: 31.02, region: "Africa", level: "violent", crowd: "354 killed; thousands of businesses looted",
+        what: "The jailing of former president Zuma set off riots and looting in KwaZulu-Natal and Gauteng.", cause: "Jailing of Jacob Zuma; poverty and unemployment.", wiki: "2021 South African unrest", xq: "Durban OR looting South Africa" });
+  add({ id: "covid2021", name: "COVID-rule riots and marches", place: "Rotterdam, Brussels and Vienna", start: "2021-11-19", end: "2021-11-21", lat: 50.85, lon: 4.35, region: "Europe", level: "violent", crowd: "About 40,000 in Vienna (police); about 35,000 in Brussels (police); riots in Rotterdam",
+        what: "A weekend of protests against lockdowns and vaccine passes; police fired shots in Rotterdam.", cause: "COVID-19 restrictions and vaccine mandates.", wiki: "Protests over responses to the COVID-19 pandemic", xq: "Rotterdam OR Brussels OR Vienna protest" });
+
+  // 2022
+  add({ id: "kazakhstan2022", name: "Kazakh unrest (Bloody January)", place: "Almaty, Kazakhstan", start: "2022-01-02", end: "2022-01-11", lat: 43.24, lon: 76.89, region: "Asia", level: "violent", cats: ["costofliving"], crowd: "Tens of thousands; 227 killed (official figure)",
+        what: "A fuel price protest became nationwide riots; Russian-led troops were flown in and the president ordered troops to 'shoot without warning'.", cause: "Doubling of fuel prices; corruption.", wiki: "2022 Kazakh unrest", xq: "Almaty OR Kazakhstan protest" });
+  add({ id: "convoy2022", name: "Freedom Convoy", place: "Ottawa, Ontario", start: "2022-01-28", end: "2022-02-23", lat: 45.42, lon: -75.7, region: "Canada", level: "clash", crowd: "Several thousand people and hundreds of trucks in Ottawa on peak weekends",
+        what: "Truckers occupied downtown Ottawa and blockaded border crossings; the government used the Emergencies Act for the first time to clear them.", cause: "COVID vaccine mandates for truckers.", wiki: "Canada convoy protest", xq: "\"Freedom Convoy\" OR Ottawa convoy" });
+  add({ id: "srilanka2022", name: "Aragalaya (the Struggle)", place: "Colombo, Sri Lanka", start: "2022-03-31", end: "2022-07-14", lat: 6.93, lon: 79.85, region: "Asia", level: "clash", cats: ["costofliving"], crowd: "Hundreds of thousands stormed the president's house on July 9, 2022",
+        what: "Protesters forced the Rajapaksa family out of power; President Gotabaya fled the country after his residence was stormed.", cause: "Economic collapse, fuel and food shortages.", wiki: "2022 Sri Lankan protests", xq: "Colombo OR Gotagogama" });
+  add({ id: "sweden2022", name: "Swedish Easter riots", place: "Malmö, Örebro and Norrköping, Sweden", start: "2022-04-14", end: "2022-04-17", lat: 55.6, lon: 13.0, region: "Europe", level: "violent", crowd: "About 104 police injured (Swedish police)",
+        what: "Counter-protesters rioted against a far-right activist's Quran-burning tour; police vehicles were burned.", cause: "Quran burnings by Rasmus Paludan's Stram Kurs party.", wiki: "2022 Sweden riots", xq: "Malmö OR Örebro riot" });
+  add({ id: "farmers2022", name: "Dutch farmers' blockades", place: "Stroe and across the Netherlands", start: "2022-06-22", end: "2022-08", lat: 52.19, lon: 5.7, region: "Europe", level: "clash", crowd: "About 40,000 at Stroe on June 22, 2022",
+        what: "Farmers blocked highways and food distribution centers; police shot at a tractor. A farmers' party (BBB) won the 2023 provincial elections.", cause: "Plans to cut nitrogen emissions and livestock.", wiki: "Dutch farmers' protests", xq: "boerenprotest" });
+  add({ id: "iran2022", name: "Woman, Life, Freedom (Mahsa Amini protests)", place: "Tehran and across Iran", start: "2022-09-16", end: "2023-03", lat: 35.69, lon: 51.39, region: "Middle East", level: "violent", crowd: "Protests in over 150 cities; at least 551 killed (Iran Human Rights); about 20,000 arrested",
+        what: "The death in custody of Mahsa Amini, arrested for 'improper' hijab, set off the biggest challenge to the Islamic Republic in years; several protesters were executed.", cause: "Mandatory hijab and the morality police; repression.", wiki: "Mahsa Amini protests", xq: "\"Mahsa Amini\" OR #MahsaAmini" });
+  add({ id: "china2022", name: "A4 (blank paper) protests", place: "Shanghai, Beijing and Urumqi, China", start: "2022-11-25", end: "2022-11-28", lat: 31.23, lon: 121.47, region: "Asia", level: "clash", crowd: "Hundreds to a few thousand in at least 17 cities",
+        what: "After a deadly Urumqi fire, people held up blank sheets of paper and some called for Xi Jinping to step down; zero-COVID ended within two weeks.", cause: "Zero-COVID lockdowns.", wiki: "2022 COVID-19 protests in China", xq: "Shanghai OR Urumqi protest" });
+  L({ id: "peru2022", name: "Peruvian protests after Castillo's removal", place: "Lima, Juliaca and Ayacucho, Peru", start: "2022-12-07", end: "2023-03", lat: -15.5, lon: -70.13, region: "Latin America", level: "violent", crowd: "Tens of thousands; about 60 killed, 49 of them in clashes with security forces (ombudsman)",
+      what: "Supporters of leftist president Pedro Castillo, removed after trying to dissolve Congress, demanded new elections; troops killed 18 in Juliaca on one day.", cause: "Castillo's removal and arrest; demands for new elections.", wiki: "2022–2023 Peruvian political protests", xq: "Perú protestas" });
+
+  // 2023 to 2024
+  add({ id: "brazil2023", name: "January 8 attacks in Brasília", place: "Brasília, Brazil", start: "2023-01-08", lat: -15.8, lon: -47.86, region: "Latin America", level: "violent", crowd: "About 4,000 rioters; about 2,000 detained",
+        what: "Supporters of defeated president Bolsonaro stormed and vandalized Congress, the presidential palace and the Supreme Court.", cause: "Claims the 2022 election was stolen.", wiki: "2023 Brazilian Congress attack", xq: "Brasília invasão OR Brasilia riot" });
+  add({ id: "israel2023", name: "Israeli judicial-reform protests", place: "Tel Aviv, Israel", start: "2023-01-07", end: "2023-10-06", lat: 32.07, lon: 34.79, region: "Middle East", level: "clash", crowd: "Hundreds of thousands on peak Saturdays (organizers); a general strike on March 27, 2023",
+        what: "Weekly mass protests against the government's plan to curb the Supreme Court; military reservists threatened to stop serving.", cause: "Netanyahu government's judicial overhaul.", wiki: "2023 Israeli judicial reform protests", xq: "Kaplan OR \"Tel Aviv\" protest" });
+  add({ id: "dublin2023", name: "Dublin riot", place: "Dublin, Ireland", start: "2023-11-23", lat: 53.35, lon: -6.26, region: "Europe", level: "violent", cats: ["fascist"], crowd: "About 500 rioters; 34 arrested that night",
+        what: "After a knife attack on children outside a school, anti-immigrant rioters burned buses and a tram and looted shops.", cause: "Stabbing by a man of foreign origin; far-right online agitation.", wiki: "2023 Dublin riot", xq: "Dublin riot" });
+  add({ id: "germany2024", name: "Demonstrations against the far right", place: "Munich, Berlin and Hamburg, Germany", start: "2024-01-13", end: "2024-02", lat: 48.14, lon: 11.58, region: "Europe", level: "peaceful", crowd: "Over 900,000 by police counts (organizers said 1.4 million) on January 19 to 21, 2024",
+        what: "Mass rallies after reports that AfD politicians met extremists to discuss deporting millions of people.", cause: "Report on a 'remigration' meeting at Potsdam.", wiki: "2024 protests against the far right in Germany", xq: "\"gegen Rechts\" Demo" });
+  add({ id: "kenya2024", name: "Kenyan Finance Bill protests", place: "Nairobi, Kenya", start: "2024-06-18", end: "2024-07", lat: -1.29, lon: 36.82, region: "Africa", level: "violent", cats: ["costofliving"], crowd: "Tens of thousands; about 60 killed (Kenya National Commission on Human Rights)",
+        what: "Gen Z protesters stormed parliament on June 25 and set part of it on fire; President Ruto withdrew the tax bill.", cause: "Tax increases in the Finance Bill.", wiki: "2024 Kenya Finance Bill protests", xq: "#RejectFinanceBill2024" });
+  add({ id: "bangladesh2024", name: "July Revolution", place: "Dhaka, Bangladesh", start: "2024-07-01", end: "2024-08-05", lat: 23.81, lon: 90.41, region: "Asia", level: "violent", crowd: "Hundreds of thousands; up to about 1,400 killed (UN human rights office)",
+        what: "Student protests over job quotas grew into an uprising; Prime Minister Sheikh Hasina fled to India on August 5.", cause: "Government job quotas; repression.", wiki: "July Revolution (Bangladesh)", xq: "Dhaka protest OR #QuotaReform" });
+  add({ id: "venezuela2024", name: "Venezuelan post-election protests", place: "Caracas, Venezuela", start: "2024-07-29", end: "2024-08", lat: 10.49, lon: -66.88, region: "Latin America", level: "violent", cats: ["antisocialist"], crowd: "Tens of thousands; about 25 killed and over 2,000 arrested",
+        what: "Protests after Maduro claimed victory although opposition tally sheets showed Edmundo González won.", cause: "Disputed presidential election.", wiki: "2024 Venezuelan political crisis", xq: "Venezuela protesta" });
+  add({ id: "mozambique2024", name: "Mozambique post-election protests", place: "Maputo, Mozambique", start: "2024-10-21", end: "2025-01", lat: -25.97, lon: 32.57, region: "Africa", level: "violent", crowd: "Over 300 killed (civil-society group Plataforma Decide)",
+        what: "Protests after FRELIMO's disputed win and the killing of two opposition aides; prisons were broken open in the unrest.", cause: "Disputed election.", wiki: "2024–2025 Mozambican protests", xq: "Maputo OR Mozambique protest" });
+  add({ id: "georgia2024", name: "Georgian pro-EU protests", place: "Tbilisi, Georgia", start: "2024-11-28", end: "2025", lat: 41.69, lon: 44.8, region: "Europe", level: "clash", crowd: "Tens of thousands nightly at the peak; over 400 arrested in the first weeks",
+        what: "Nightly protests on Rustaveli Avenue after the ruling Georgian Dream party suspended EU membership talks.", cause: "Suspension of EU accession; disputed election.", wiki: "2024–2025 Georgian protests", xq: "Tbilisi protest" });
+  add({ id: "korea2024", name: "Protests over South Korea's martial law", place: "Seoul, South Korea", start: "2024-12-03", end: "2025-04-04", lat: 37.53, lon: 126.92, region: "Asia", level: "peaceful", crowd: "December 14, 2024: about 1 million (organizers); about 200,000 (police)",
+        what: "Crowds rushed to the National Assembly after President Yoon declared martial law; he was impeached and removed from office.", cause: "Declaration of martial law.", wiki: "2024 South Korean martial law crisis", xq: "Seoul protest OR martial law Korea" });
+
+  // 2025 to 2026
+  add({ id: "turkey2025", name: "Protests over İmamoğlu's arrest", place: "Istanbul, Turkey", start: "2025-03-19", end: "2025-04", lat: 41.01, lon: 28.98, region: "Europe", level: "clash", crowd: "Hundreds of thousands at the largest rallies (opposition); nearly 1,900 detained in the first week (Interior Ministry)",
+        what: "Turkey's largest protests in a decade after the arrest of Istanbul mayor Ekrem İmamoğlu, Erdoğan's main rival.", cause: "Arrest of the opposition's leading presidential candidate.", wiki: "2025 Turkish protests", xq: "İmamoğlu OR Saraçhane" });
+  add({ id: "indonesia2025", name: "Indonesian protests", place: "Jakarta, Indonesia", start: "2025-08-25", end: "2025-09", lat: -6.2, lon: 106.82, region: "Asia", level: "violent", cats: ["costofliving"], crowd: "Tens of thousands; at least 10 killed",
+        what: "Protests over lawmakers' perks became riots after a police vehicle ran over a delivery driver; lawmakers' homes were looted.", cause: "Lawmakers' housing allowance; inequality.", wiki: "2025 Indonesian protests", xq: "Jakarta demo OR Indonesia protest" });
+  add({ id: "nepal2025", name: "Gen Z protests", place: "Kathmandu, Nepal", start: "2025-09-08", end: "2025-09-12", lat: 27.7, lon: 85.32, region: "Asia", level: "violent", crowd: "Tens of thousands; about 76 killed",
+        what: "A ban on social media set off youth protests; parliament was burned, Prime Minister Oli resigned and former chief justice Sushila Karki became interim leader.", cause: "Social media ban and corruption.", wiki: "2025 Nepalese Gen Z protests", xq: "Kathmandu OR Nepal protest" });
+  add({ id: "philippines2025", name: "Flood-control corruption protests", place: "Manila, Philippines", start: "2025-09-21", lat: 14.6, lon: 120.98, region: "Asia", level: "clash", crowd: "Tens of thousands; clashes and over 200 arrests near the presidential palace",
+        what: "Rallies against the theft of public money meant for flood-control projects.", cause: "Corruption in flood-control contracts.", wiki: "Trillion Peso March", xq: "\"Trillion Peso March\" OR Mendiola" });
+  add({ id: "madagascar2025", name: "Gen Z Madagascar protests and military takeover", place: "Antananarivo, Madagascar", start: "2025-09-25", end: "2025-10-17", lat: -18.88, lon: 47.51, region: "Africa", level: "violent", crowd: "Thousands; at least 22 killed (UN human rights office; the government said 12)",
+        what: "Protests over power and water cuts grew until the army's CAPSAT unit sided with protesters; President Rajoelina fled and Colonel Michael Randrianirina took power.", cause: "Water and power outages; corruption.", wiki: "2025 Malagasy protests", xq: "Antananarivo OR Madagascar protest" });
+  add({ id: "morocco2025", name: "GenZ 212 protests", place: "Rabat and Casablanca, Morocco", start: "2025-09-27", end: "2025-10", lat: 34.02, lon: -6.84, region: "Africa", level: "violent", crowd: "Thousands in a dozen cities; 3 killed",
+        what: "Youth organized online demanded hospitals and schools instead of World Cup stadiums.", cause: "Poor health care and education; World Cup spending.", wiki: "GenZ 212 protests", xq: "GenZ212 OR Morocco protest" });
+  add({ id: "peru2025", name: "Peruvian Gen Z protests", place: "Lima, Peru", start: "2025-09-20", end: "2025-10-15", lat: -12.05, lon: -77.04, region: "Latin America", level: "violent", crowd: "Thousands; 1 killed on October 15",
+        what: "Youth protests over pensions, crime and corruption; Congress removed President Boluarte on October 10.", cause: "Crime, pension law and corruption.", wiki: "2025 Peruvian protests", xq: "Lima protesta" });
+  add({ id: "iran2026", name: "Iranian protests and massacre", place: "Tehran and across Iran", start: "2025-12-28", end: "2026-01-20", lat: 35.69, lon: 51.39, region: "Middle East", level: "violent", cats: ["costofliving"], crowd: "Nationwide. Killed: at least 7,002 (rights group HRANA, February 2026); the government said 3,117",
+        what: "Protests over the collapse of the currency spread nationwide; under an internet blackout, security forces carried out the deadliest crackdown in the Islamic Republic's history.", cause: "Currency collapse, prices and repression.", wiki: "2025–2026 Iranian protests", xq: "Iran protest" });
+
   /* Crowd sizes: best documented estimate, with who made it where sources differ. Blank = no reliable count. */
   var CROWD = {
     boudica: "Tens of thousands of rebels (a Roman historian's figure of 230,000 is considered exaggerated)",
@@ -640,12 +812,24 @@ window.PROTESTS = (function () {
     g20hamburg: "Tens of thousands of protesters; about 20,000 police",
     daysofrage: "A few hundred",
     j20: "About 230 arrested",
-    argentina2001: "Hundreds of thousands nationwide; 39 killed"
+    argentina2001: "Hundreds of thousands nationwide; 39 killed",
+    france2005: "About 9,000 vehicles burned and about 2,900 arrests over three weeks",
+    greece2008: "Thousands in Athens and other cities over several weeks",
+    england2011: "About 3,000+ arrests; 5 killed",
+    occupy: "Thousands at the peak; about 700 arrested on the Brooklyn Bridge on October 1, 2011",
+    ferguson: "Thousands; National Guard deployed",
+    charlottesville: "About 500 to 600 white nationalists and similar numbers of counter-protesters; 1 killed",
+    catalonia2017: "About 700,000 marched in Barcelona on October 3 (city police)",
+    kenosha: "Thousands; 2 killed by Kyle Rittenhouse, who was acquitted",
+    chaz: "Hundreds to thousands; the zone lasted about three weeks",
+    portland2020: "Nightly protests for over 100 days; hundreds to thousands each night",
+    nahel: "About 3,500 arrests over a week (Interior Ministry)",
+    uk2024: "Over 1,000 arrested in the weeks after (police)"
   };
-  E.forEach(function (e) { e.crowd = CROWD[e.id] || ""; });
+  E.forEach(function (e) { e.crowd = CROWD[e.id] || e.crowd || ""; });
 
   /* Category tags for filters */
-  var CATS = { left: "Left-wing (all)", communist: "Communist and socialist takeovers", fascist: "Fascist, Nazi and far-right", ice: "Anti-ICE", blm: "Black Lives Matter", palestine: "Pro-Palestinian", nokings: "No Kings", costofliving: "Cost of living", socialism: "Socialism-related" };
+  var CATS = { left: "Left-wing (all)", communist: "Communist and socialist takeovers", fascist: "Fascist, Nazi and far-right", ice: "Anti-ICE", blm: "Black Lives Matter", palestine: "Pro-Palestinian", nokings: "No Kings", costofliving: "Cost of living", socialism: "Socialism-related", antisocialist: "Against socialist or communist governments" };
   var TAG = {
     ice: "la2025 broadview2025 mpls2026 iceout bushwick delaney indy bronx salem",
     blm: "ferguson baltimore floyd",
@@ -707,12 +891,21 @@ window.PROTESTS = (function () {
     var a = parts(e.start);
     if (a.y < 2007) return;
     var b = parts(e.end || e.start);
-    var term = XTERMS[e.id] || e.place.split(",")[0];
-    if (!XTERMS[e.id]) term = '"' + term + '" (protest OR riot OR clashes)';
-    var q = term + " filter:videos since:" + isoDay(a, false) + " until:" + isoDay(b, true);
-    e.links.push(["X (Twitter)", "Videos posted at the time", "https://x.com/search?q=" + encodeURIComponent(q) + "&f=live", 1, "x"]);
+    var term = XTERMS[e.id] || e.xq || e.place.split(",")[0];
+    if (!XTERMS[e.id] && !e.xq) term = '"' + term + '" (protest OR riot OR clashes)';
+    var q = term + " since:" + isoDay(a, false) + " until:" + isoDay(b, true);
+    e.links.push(["X (Twitter)", "Top posts from the time", "https://x.com/search?q=" + encodeURIComponent(q) + "&f=top", 1, "x"]);
   });
 
+  /* Specific posts found by searching X (October 2026), with any Community Note shown on the post at the time */
+  var XP = window.XPOSTS || {};
+  E.forEach(function (e) {
+    (XP[e.id] || []).forEach(function (p) {
+      var t = (p[4] ? "Video posted " : "Post from ") + p[2] + (p[3] ? ": " + p[3] : "") + (p[5] ? " [⚠ Community Note: " + p[5] + "]" : "");
+      e.links.push([(p[5] ? "⚠ " : "") + "X @" + p[1], t, "https://x.com/" + p[1] + "/status/" + p[0], p[4] ? 1 : 0, "xpost"]);
+    });
+    e.xnotes = (XP[e.id] || []).filter(function (p) { return p[5]; }).length;
+  });
   E.sort(function (a, b) { return a.sortKey - b.sortKey; });
   E.CATS = CATS;
   return E;
