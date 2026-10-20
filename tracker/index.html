@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="referrer" content="no-referrer">
+<style>
+  :root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; font-size: 14px; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+<title>Protest Tracker</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,650&display=swap">
+<style>
+  /* Layout: news-desk tracker. Header with counts and filters, then map (left) and dated list (right); stacks on phones. */
+  :root {
+    --bg: #eef0f2; --panel: #fbfbfb; --ink: #18202a; --muted: #5b6571; --line: #d5dae0;
+    --sea: #dde3e8; --land: #c9cfd6; --border: #f4f5f7;
+    --violent: #c4372f; --clash: #d98a1c; --peaceful: #2f7d5b; --link: #1f5fbf; --nk: #6b4fd8;
+    --f-display: "Newsreader", Georgia, serif; --f-ui: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #111418; --panel: #181c21; --ink: #e6e9ec; --muted: #9aa3ad; --line: #2b3239;
+      --sea: #1d232a; --land: #303841; --border: #1d232a;
+      --violent: #e05248; --clash: #e7a03c; --peaceful: #45a37a; --link: #7aa7ee; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #111418; --panel: #181c21; --ink: #e6e9ec; --muted: #9aa3ad; --line: #2b3239;
+    --sea: #1d232a; --land: #303841; --border: #1d232a;
+    --violent: #e05248; --clash: #e7a03c; --peaceful: #45a37a; --link: #7aa7ee; color-scheme: dark;
+  }
+  [hidden] { display: none !important; }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--f-ui); font-size: 14px; display: flex; flex-direction: column; }
+  :focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+  header {
+    background: var(--panel); border-bottom: 1px solid var(--line);
+    padding-block: 12px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+    display: grid; gap: 8px;
+  }
+  .top { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: baseline; }
+  h1 { margin: 0; font-family: var(--f-display); font-size: 22px; font-weight: 650; }
+  .sub { color: var(--muted); font-size: 13px; max-width: 95ch; line-height: 1.45; }
+  .counts { display: flex; flex-wrap: wrap; gap: 6px; font-variant-numeric: tabular-nums; font-size: 12.5px; }
+  .counts span { border: 1px solid var(--line); border-radius: 99px; padding: 3px 10px; background: var(--bg); display: inline-flex; gap: 6px; align-items: center; }
+  .counts b { font-weight: 650; }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  select, .controls button {
+    height: 32px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink);
+    padding: 0 9px; font: inherit; font-size: 12.5px; cursor: pointer;
+  }
+  .controls button[aria-pressed="true"] { background: var(--ink); color: var(--panel); border-color: var(--ink); }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: 0 0 auto; }
+  .dot.violent { background: var(--violent); } .dot.clash { background: var(--clash); } .dot.peaceful { background: var(--peaceful); }
+
+  main { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(320px, 1fr); }
+  #map { position: relative; background: var(--sea); min-height: 0; }
+  #map svg { display: block; width: 100%; height: 100%; touch-action: none; }
+  .land { fill: var(--land); stroke: var(--border); stroke-width: .6; vector-effect: non-scaling-stroke; }
+  .pin { cursor: pointer; }
+  .pin circle { stroke: var(--panel); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+  .pin.sel circle { stroke: var(--ink); stroke-width: 2.5; }
+  .pin text { font-family: var(--f-ui); font-weight: 600; fill: var(--ink); paint-order: stroke; stroke: var(--sea); stroke-width: 3px; stroke-linejoin: round; vector-effect: non-scaling-stroke; pointer-events: none; }
+  .zoombtns { position: absolute; right: 10px; top: 10px; display: grid; gap: 6px; }
+  .zoombtns button { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); font-size: 16px; cursor: pointer; }
+
+  #list { overflow: auto; background: var(--panel); border-left: 1px solid var(--line); padding: 12px max(16px, env(safe-area-inset-right, 0px)) 16px 16px; display: grid; gap: 10px; align-content: start; min-height: 0; }
+  .yearhead { font-family: var(--f-display); font-weight: 650; font-size: 15px; color: var(--muted); padding-top: 4px; font-variant-numeric: tabular-nums; }
+  .card { border: 1px solid var(--line); border-radius: 9px; padding: 10px 12px; background: var(--bg); display: grid; gap: 4px; scroll-margin: 12px; cursor: pointer; }
+  .card.sel { border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink); }
+  .card .when { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; display: flex; gap: 6px; align-items: center; }
+  .card h2 { margin: 0; font-family: var(--f-display); font-size: 16.5px; font-weight: 650; }
+  .card p { margin: 0; line-height: 1.45; font-size: 13.2px; }
+  .card .cause { color: var(--muted); font-size: 12.5px; }
+  .links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+  .links a { font-size: 12.3px; color: var(--link); text-decoration: none; border: 1px solid var(--line); border-radius: 6px; padding: 3px 8px; background: var(--panel); }
+  .links a:hover { border-color: var(--link); }
+  .crowd { font-size: 12.8px; } .crowd b { font-weight: 600; }
+  .chips { display: flex; flex-wrap: wrap; gap: 4px; }
+  .chip { font-size: 11px; border: 1px solid var(--line); border-radius: 99px; padding: 1px 7px; color: var(--muted); }
+  details.cn { border-top: 1px dashed var(--line); padding-top: 5px; font-size: 12.3px; }
+  details.cn summary { cursor: pointer; font-weight: 600; }
+  .cnitem { margin-top: 6px; line-height: 1.4; }
+  .cnitem .lab { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; padding: 1px 5px; border-radius: 4px; margin-right: 5px; }
+  .cnitem .lab.m { background: color-mix(in srgb, var(--violent) 18%, transparent); color: var(--violent); }
+  .cnitem .lab.n { background: color-mix(in srgb, var(--peaceful) 18%, transparent); color: var(--peaceful); }
+  .cnitem a { color: var(--link); font-size: 11.5px; margin-right: 8px; }
+  .nkdot { fill: var(--nk); opacity: .65; cursor: pointer; }
+  #nkpop { position: absolute; z-index: 6; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.2); max-width: 240px; }
+  #nkpop a { color: var(--link); }
+  .note { font-size: 12px; color: var(--muted); line-height: 1.45; border-top: 1px solid var(--line); padding-top: 10px; }
+
+  @media (max-width: 760px) {
+    body { height: auto; }
+    main { grid-template-columns: 1fr; }
+    #map { height: 50vh; }
+    #list { border-left: 0; border-top: 1px solid var(--line); }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <h1>Protest Tracker</h1>
+    <a href="../" style="font-size:13px;color:var(--link)">← Back to the atlas</a>
+    <span class="sub">Protests, riots, revolts and takeovers on every inhabited continent, from AD 60 to October 19, 2026. Every entry has its dates, a crowd figure where one was recorded, and links to read or watch more.</span>
+  </div>
+  <div class="counts" id="counts"></div>
+  <div class="controls">
+    <select id="era" aria-label="Time period">
+      <option value="">All time, AD 60 to today</option>
+      <option value="now">2025 to today</option>
+      <option value="2000s">2000 to 2024</option>
+      <option value="1900s">1900 to 1999</option>
+      <option value="pre1900">Before 1900</option>
+    </select>
+    <select id="region" aria-label="Region">
+      <option value="">All regions</option>
+      <option value="Europe">Europe</option>
+      <option value="United States">United States</option>
+      <option value="Mediterranean">Roman Mediterranean</option>
+      <option value="Latin America">Latin America and Caribbean</option>
+      <option value="Asia">Asia</option>
+      <option value="Africa">Africa</option>
+      <option value="Oceania">Oceania</option>
+    </select>
+    <select id="sort" aria-label="Sort order">
+      <option value="new">Newest first</option>
+      <option value="old">Oldest first</option>
+    </select>
+    <select id="cat" aria-label="Movement">
+      <option value="">All movements</option>
+      <option value="left">Left-wing (all)</option>
+      <option value="communist">Communist and socialist takeovers</option>
+      <option value="fascist">Fascist, Nazi and far-right</option>
+      <option value="ice">Anti-ICE</option>
+      <option value="blm">Black Lives Matter</option>
+      <option value="palestine">Pro-Palestinian</option>
+      <option value="nokings">No Kings</option>
+      <option value="costofliving">Cost of living</option>
+      <option value="socialism">Socialism-related</option>
+    </select>
+    <button type="button" id="violent" aria-pressed="false"><span class="dot violent"></span> Violent only</button>
+    <button type="button" id="nkbtn" aria-pressed="false"><span class="dot" style="background:var(--nk)"></span> No Kings events (organizers' catalog)</button>
+  </div>
+</header>
+
+<main>
+  <div id="map" aria-label="Map of protests">
+    <div class="zoombtns"><button id="zi" aria-label="Zoom in">+</button><button id="zo" aria-label="Zoom out">−</button><button id="zr" aria-label="Fit all" style="font-size:12px">⤢</button></div>
+  </div>
+  <div id="list"></div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script src="../protests.js"></script>
+<script src="../cnotes.js"></script>
+<script>
+(function () {
+  var P = window.PROTESTS;
+  var COLORS = { violent: "var(--violent)", clash: "var(--clash)", peaceful: "var(--peaceful)" };
+  var LEVEL = { violent: "Arson, riot or serious violence", clash: "Clashes with police", peaceful: "Mostly peaceful" };
+  var state = { era: "", region: "", sort: "new", violent: false, cat: "", nk: false, sel: null };
+  var CN = window.CNOTES || {}, NK = null, nkG = null;
+
+  // Restore a remembered view (per viewer convenience only)
+  try { var saved = JSON.parse(localStorage.getItem("ptrack") || "null"); if (saved) Object.assign(state, saved, { sel: null }); } catch (e) {}
+  document.getElementById("era").value = state.era;
+  document.getElementById("region").value = state.region;
+  document.getElementById("sort").value = state.sort;
+  document.getElementById("violent").setAttribute("aria-pressed", String(state.violent));
+  document.getElementById("cat").value = state.cat || "";
+  document.getElementById("nkbtn").setAttribute("aria-pressed", String(!!state.nk));
+  function remember() { try { localStorage.setItem("ptrack", JSON.stringify({ era: state.era, region: state.region, sort: state.sort, violent: state.violent, cat: state.cat, nk: state.nk })); } catch (e) {} }
+
+  function filtered() {
+    return P.filter(function (d) {
+      return (!state.era || d.era === state.era) && (!state.region || d.region === state.region) && (!state.violent || d.level === "violent") && (!state.cat || d.cats.indexOf(state.cat) >= 0);
+    }).sort(function (a, b) { return state.sort === "new" ? b.sortKey - a.sortKey : a.sortKey - b.sortKey; });
+  }
+
+  /* ---------- Map ---------- */
+  var mapEl = document.getElementById("map");
+  var svg = d3.select(mapEl).insert("svg", ".zoombtns");
+  var root = svg.append("g");
+  var projection = d3.geoNaturalEarth1();
+  var path = d3.geoPath(projection);
+  var land, pins, zoom, k = 1;
+
+  fetch("../data/provinces.json").then(function (r) { return r.json(); }).then(function (topo) {
+    land = root.append("g").selectAll("path").data(topojson.feature(topo, topo.objects.countries).features).join("path").attr("class", "land");
+    pins = root.append("g").selectAll("g").data(P, function (d) { return d.id; }).join("g").attr("class", "pin")
+      .attr("tabindex", 0).attr("role", "button").attr("aria-label", function (d) { return d.name + ", " + d.dateLabel; })
+      .on("click", function (ev, d) { select(d.id, true); })
+      .on("keydown", function (ev, d) { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); select(d.id, true); } });
+    pins.append("circle").attr("fill", function (d) { return COLORS[d.level]; });
+    pins.append("title").text(function (d) { return d.name + " (" + d.dateLabel + ")"; });
+    pins.append("text");
+    nkG = root.insert("g", function () { return pins.node().parentNode; }).style("display", "none");
+    fetch("../data/nokings.json").then(function (r) { return r.json(); }).then(function (nk) {
+      NK = nk;
+      nkG.selectAll("circle").data(nk.pts).join("circle").attr("class", "nkdot")
+        .on("click", function (ev, p) { nkPopup(ev, p); });
+      layout(); update();
+    }).catch(function () {});
+    zoom = d3.zoom().scaleExtent([1, 40]).on("zoom", function (ev) { root.attr("transform", ev.transform); k = ev.transform.k; styleZoom(); });
+    svg.call(zoom).on("dblclick.zoom", null);
+    d3.select("#zi").on("click", function () { svg.transition().duration(250).call(zoom.scaleBy, 1.8); });
+    d3.select("#zo").on("click", function () { svg.transition().duration(250).call(zoom.scaleBy, 1 / 1.8); });
+    d3.select("#zr").on("click", fit);
+    layout();
+    window.addEventListener("resize", layout);
+    update();
+  });
+
+  function layout() {
+    var w = mapEl.clientWidth, h = mapEl.clientHeight;
+    svg.attr("viewBox", "0 0 " + w + " " + h);
+    // Atlantic-centered view: North America through Europe and the Mediterranean
+    projection.fitExtent([[10, 10], [w - 10, h - 10]], { type: "MultiPoint", coordinates: [[-130, 15], [-130, 60], [150, 15], [150, 60], [0, -40], [0, 65], [-75, -40], [150, -40]] });
+    land.attr("d", path);
+    pins.attr("transform", function (d) { var p = projection([d.lon, d.lat]); return "translate(" + p[0] + "," + p[1] + ")"; });
+    if (nkG) nkG.selectAll("circle").attr("cx", function (p) { return projection([p[1], p[0]])[0]; }).attr("cy", function (p) { return projection([p[1], p[0]])[1]; });
+    styleZoom();
+  }
+  var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  function nkDay(i) { var p = NK.days[i].split("-"); return MONTHS[+p[1] - 1] + " " + (+p[2]) + ", " + p[0]; }
+  function nkPopup(ev, p) {
+    var box = document.getElementById("nkpop");
+    if (!box) { box = document.createElement("div"); box.id = "nkpop"; mapEl.appendChild(box); }
+    box.innerHTML = "<b>No Kings event</b><br>" + (p[4] || "Location listed") + "<br>" + nkDay(p[2]) +
+      "<br><a href='https://www.mobilize.us/nokings/event/" + p[3] + "/' target='_blank' rel='noopener'>Organizers' event page ↗</a>" +
+      "<div style='color:var(--muted);font-size:11px;margin-top:3px'>Registered in the organizers' catalog; a listing does not show how many attended.</div>";
+    var r = mapEl.getBoundingClientRect();
+    box.style.left = Math.min(ev.clientX - r.left + 10, r.width - 250) + "px"; box.style.top = Math.max(8, ev.clientY - r.top - 60) + "px";
+    ev.stopPropagation();
+  }
+  document.addEventListener("click", function (ev) { var b = document.getElementById("nkpop"); if (b && !b.contains(ev.target)) b.remove(); });
+  function styleZoom() {
+    if (!pins) return;
+    if (nkG) nkG.selectAll("circle").attr("r", 1.8 / Math.sqrt(k) / Math.sqrt(k) * Math.min(2.2, Math.sqrt(k)));
+    pins.selectAll("circle").attr("r", 5 / k * Math.min(1.6, 1 + (k - 1) * 0.05));
+    pins.select("text").attr("x", 7 / k).attr("y", 3.5 / k).style("font-size", (11 / k) + "px")
+      .text(function (d) { return d.place.split(",")[0]; }).style("display", k >= 5 ? null : "none");
+  }
+  function fit() {
+    var list = filtered();
+    if (!list.length) return svg.transition().duration(400).call(zoom.transform, d3.zoomIdentity);
+    var w = mapEl.clientWidth, h = mapEl.clientHeight;
+    var xs = list.map(function (d) { return projection([d.lon, d.lat]); });
+    var x0 = d3.min(xs, function (p) { return p[0]; }), x1 = d3.max(xs, function (p) { return p[0]; });
+    var y0 = d3.min(xs, function (p) { return p[1]; }), y1 = d3.max(xs, function (p) { return p[1]; });
+    var s = Math.max(1, Math.min(12, 0.85 / Math.max((x1 - x0 + 40) / w, (y1 - y0 + 40) / h)));
+    var cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+    svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity.translate(w / 2 - s * cx, h / 2 - s * cy).scale(s));
+  }
+
+  /* ---------- List and counts ---------- */
+  var listEl = document.getElementById("list");
+  function update() {
+    var list = filtered();
+    var c = { violent: 0, clash: 0, peaceful: 0 }, rallies = 0;
+    list.forEach(function (d) { c[d.level]++; if (d.events) rallies += d.events; });
+    var regions = d3.rollup(list, function (v) { return v.length; }, function (d) { return d.region; });
+    document.getElementById("counts").innerHTML =
+      "<span><b>" + list.length + "</b> protests and riots listed</span>" +
+      "<span><i class='dot violent'></i><b>" + c.violent + "</b> violent</span>" +
+      "<span><i class='dot clash'></i><b>" + c.clash + "</b> clashes with police</span>" +
+      "<span><i class='dot peaceful'></i><b>" + c.peaceful + "</b> mostly peaceful</span>" +
+      Array.from(regions).map(function (r) { return "<span>" + r[0] + ": <b>" + r[1] + "</b></span>"; }).join("") +
+      (rallies ? "<span>The October 17 'No Kings' entry alone covers <b>" + rallies.toLocaleString() + "+</b> local rallies</span>" : "") +
+      (NK && state.nk ? "<span><i class='dot' style='background:var(--nk)'></i><b>" + nkShown().toLocaleString() + "</b> No Kings events on the map (organizers registered 11,112 in total)</span>" : "") +
+      "<span>Community Notes found on <b>" + list.filter(function (d) { return CN[d.id]; }).length + "</b> of these</span>";
+    if (nkG) {
+      var showDays = nkDays();
+      nkG.style("display", state.nk ? null : "none");
+      nkG.selectAll("circle").style("display", function (p) { return showDays[p[2]] ? null : "none"; });
+    }
+    listEl.innerHTML = "";
+    var lastY = null;
+    list.forEach(function (d) {
+      if (d.y0 !== lastY) {
+        var yh = document.createElement("div"); yh.className = "yearhead"; yh.textContent = d.y0 === 2026 || d.y0 === 2025 ? String(d.y0) : d.y0 < 1000 ? "AD " + d.y0 : String(d.y0);
+        listEl.appendChild(yh); lastY = d.y0;
+      }
+      var el = document.createElement("article");
+      el.className = "card" + (state.sel === d.id ? " sel" : ""); el.id = "c-" + d.id; el.tabIndex = 0;
+      el.innerHTML = "<div class='when'><i class='dot " + d.level + "' title='" + LEVEL[d.level] + "'></i><span></span></div><h2></h2><p class='what'></p><p class='crowd'></p><p class='cause'></p><div class='chips'></div><div class='links'></div>";
+      el.querySelector(".when span").textContent = d.dateLabel + " · " + d.place;
+      el.querySelector("h2").textContent = d.name;
+      el.querySelector(".what").textContent = d.what;
+      el.querySelector(".cause").textContent = "Cause: " + d.cause;
+      el.querySelector(".crowd").innerHTML = "<b>Crowd:</b> " + (d.crowd ? d.crowd.replace(/[<>]/g, "") : "<span style='color:var(--muted)'>no reliable count recorded</span>");
+      el.querySelector(".chips").innerHTML = d.catLabels.map(function (c) { return "<span class='chip'>" + c + "</span>"; }).join("");
+      if (CN[d.id]) {
+        var det = document.createElement("details"); det.className = "cn";
+        var m = CN[d.id].filter(function (n) { return n[2] === "m"; }).length;
+        det.innerHTML = "<summary>Community Notes on X: " + CN[d.id].length + " live note" + (CN[d.id].length > 1 ? "s" : "") + (m ? " (" + m + " flag misleading posts)" : "") + "</summary>";
+        CN[d.id].forEach(function (n) {
+          var it = document.createElement("div"); it.className = "cnitem";
+          it.innerHTML = "<span class='lab " + n[2] + "'>" + (n[2] === "m" ? "Misleading post" : "Not misleading") + "</span>";
+          it.appendChild(document.createTextNode(n[3].replace(/https?:\/\/\S+/g, "").trim()));
+          it.insertAdjacentHTML("beforeend", "<br><a href='https://x.com/i/status/" + n[0] + "' target='_blank' rel='noopener'>Post ↗</a><a href='https://x.com/i/birdwatch/n/" + n[1] + "' target='_blank' rel='noopener'>Note ↗</a><span style='color:var(--muted);font-size:11px'>" + n[4] + "</span>");
+          det.appendChild(it);
+        });
+        el.appendChild(det);
+      }
+      var ln = el.querySelector(".links");
+      d.links.forEach(function (l) {
+        var a = document.createElement("a");
+        a.href = l[2]; a.target = "_blank"; a.rel = "noopener";
+        a.textContent = (l[3] ? "▶ Video · " : "") + l[0] + ": " + l[1] + " ↗";
+        ln.appendChild(a);
+      });
+      el.addEventListener("click", function (ev) { if (!ev.target.closest("a")) select(d.id, false, true); });
+      el.addEventListener("keydown", function (ev) { if (ev.key === "Enter" && !ev.target.closest("a")) select(d.id, false, true); });
+      listEl.appendChild(el);
+    });
+    var note = document.createElement("div");
+    note.className = "note";
+    note.textContent = "Crowd sizes are the best documented estimates; police and organizers often differ, and both are shown where reported. Community Notes are X's crowd-sourced fact-checks; only notes currently shown on X (rated helpful) and about footage or images of these events are listed, matched by place and date. No Kings dots are events registered in the organizers' own catalog. This list covers major, well-documented events, not every protest that ever happened. Older entries link to a Wikipedia search for the event; modern entries link to news reports and videos, which open on the outlet's own site. Entries since 2007 also have an X (Twitter) link: it opens X's search for videos posted from that place during those dates, not one specific post. Viewing it may require an X account, and clips there are unverified: old or unrelated footage is often reposted with new captions, so check against the news links. Figures are as reported and may change.";
+    listEl.appendChild(note);
+    if (pins) pins.style("display", function (d) { return list.indexOf(d) >= 0 ? null : "none"; }).classed("sel", function (d) { return d.id === state.sel; });
+  }
+
+  function select(id, fromMap, flyTo) {
+    state.sel = id;
+    d3.selectAll(".card").classed("sel", function () { return this.id === "c-" + id; });
+    if (pins) pins.classed("sel", function (d) { return d.id === id; });
+    var el = document.getElementById("c-" + id);
+    if (fromMap && el) el.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "nearest" });
+    if (flyTo && zoom) {
+      var d = P.find(function (x) { return x.id === id; }), p = projection([d.lon, d.lat]);
+      var w = mapEl.clientWidth, h = mapEl.clientHeight, s = Math.max(k, 6);
+      svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity.translate(w / 2 - s * p[0], h / 2 - s * p[1]).scale(s));
+    }
+  }
+
+  function nkDays() {
+    var on = {};
+    if (!NK) return on;
+    NK.days.forEach(function (dd, i) {
+      var y = +dd.slice(0, 4);
+      var eraOk = !state.era || state.era === "now";
+      on[i] = eraOk && (!state.region || state.region === "United States" || state.region === "Europe") && (!state.cat || state.cat === "nokings") && !state.violent;
+    });
+    return on;
+  }
+  function nkShown() { var on = nkDays(); return NK.pts.filter(function (p) { return on[p[2]]; }).length; }
+  document.getElementById("nkbtn").addEventListener("click", function (e) {
+    state.nk = !state.nk; e.currentTarget.setAttribute("aria-pressed", String(state.nk)); remember(); update();
+  });
+  ["era", "region", "sort", "cat"].forEach(function (id) {
+    document.getElementById(id).addEventListener("change", function (e) { state[id] = e.target.value; remember(); update(); if (id !== "sort") fit(); });
+  });
+  document.getElementById("violent").addEventListener("click", function (e) {
+    state.violent = !state.violent; e.currentTarget.setAttribute("aria-pressed", String(state.violent)); remember(); update(); fit();
+  });
+})();
+</script>
+</body>
+</html>
