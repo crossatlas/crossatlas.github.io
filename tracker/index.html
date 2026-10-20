@@ -11,27 +11,27 @@
   img { max-width: 100%; }
   [hidden] { display: none !important; }
 </style>
-<title>Protest Tracker</title>
+<title>Protest, Riot and Terrorist Attack Tracker</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,650&display=swap">
 <style>
   /* Layout: news-desk tracker. Header with counts and filters, then map (left) and dated list (right); stacks on phones. */
   :root {
     --bg: #eef0f2; --panel: #fbfbfb; --ink: #18202a; --muted: #5b6571; --line: #d5dae0;
     --sea: #dde3e8; --land: #c9cfd6; --border: #f4f5f7;
-    --violent: #c4372f; --clash: #d98a1c; --peaceful: #2f7d5b; --link: #1f5fbf; --nk: #6b4fd8;
+    --violent: #c4372f; --terror: #b0179c; --clash: #d98a1c; --peaceful: #2f7d5b; --link: #1f5fbf; --nk: #6b4fd8;
     --f-display: "Newsreader", Georgia, serif; --f-ui: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg: #111418; --panel: #181c21; --ink: #e6e9ec; --muted: #9aa3ad; --line: #2b3239;
       --sea: #1d232a; --land: #303841; --border: #1d232a;
-      --violent: #e05248; --clash: #e7a03c; --peaceful: #45a37a; --link: #7aa7ee; color-scheme: dark;
+      --violent: #e05248; --terror: #f05ae0; --clash: #e7a03c; --peaceful: #45a37a; --link: #7aa7ee; color-scheme: dark;
     }
   }
   :root[data-theme="dark"] {
     --bg: #111418; --panel: #181c21; --ink: #e6e9ec; --muted: #9aa3ad; --line: #2b3239;
     --sea: #1d232a; --land: #303841; --border: #1d232a;
-    --violent: #e05248; --clash: #e7a03c; --peaceful: #45a37a; --link: #7aa7ee; color-scheme: dark;
+    --violent: #e05248; --terror: #f05ae0; --clash: #e7a03c; --peaceful: #45a37a; --link: #7aa7ee; color-scheme: dark;
   }
   [hidden] { display: none !important; }
   html, body { height: 100%; }
@@ -55,7 +55,7 @@
   }
   .controls button[aria-pressed="true"] { background: var(--ink); color: var(--panel); border-color: var(--ink); }
   .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: 0 0 auto; }
-  .dot.violent { background: var(--violent); } .dot.clash { background: var(--clash); } .dot.peaceful { background: var(--peaceful); }
+  .dot.violent { background: var(--violent); } .dot.terror { background: var(--terror); } .dot.clash { background: var(--clash); } .dot.peaceful { background: var(--peaceful); }
 
   main { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(320px, 1fr); }
   #map { position: relative; background: var(--sea); min-height: 0; }
@@ -105,9 +105,9 @@
 <body>
 <header>
   <div class="top">
-    <h1>Protest Tracker</h1>
+    <h1>Protest, Riot and Terrorist Attack Tracker</h1>
     <a href="../" style="font-size:13px;color:var(--link)">← Back to the atlas</a>
-    <span class="sub">Protests, riots, revolts and takeovers on every inhabited continent, from AD 60 to October 19, 2026. Every entry has its dates, a crowd figure where one was recorded, and links to read or watch more.</span>
+    <span class="sub">Protests, riots, revolts, takeovers and terrorist attacks on every inhabited continent, from AD 60 to October 19, 2026. Every entry has its dates, a crowd figure or death toll where one was recorded, and links to read or watch more.</span>
   </div>
   <div class="counts" id="counts"></div>
   <div class="controls">
@@ -146,8 +146,9 @@
       <option value="costofliving">Cost of living</option>
       <option value="socialism">Socialism-related</option>
       <option value="antisocialist">Against socialist or communist governments</option>
+      <option value="terror">Terrorist attacks</option>
     </select>
-    <button type="button" id="violent" aria-pressed="false"><span class="dot violent"></span> Violent only</button>
+    <button type="button" id="violent" aria-pressed="false"><span class="dot violent"></span> Violent and terror only</button>
     <button type="button" id="nkbtn" aria-pressed="false"><span class="dot" style="background:var(--nk)"></span> No Kings events (organizers' catalog)</button>
   </div>
 </header>
@@ -167,8 +168,8 @@
 <script>
 (function () {
   var P = window.PROTESTS;
-  var COLORS = { violent: "var(--violent)", clash: "var(--clash)", peaceful: "var(--peaceful)" };
-  var LEVEL = { violent: "Arson, riot or serious violence", clash: "Clashes with police", peaceful: "Mostly peaceful" };
+  var COLORS = { terror: "var(--terror)", violent: "var(--violent)", clash: "var(--clash)", peaceful: "var(--peaceful)" };
+  var LEVEL = { terror: "Terrorist attack", violent: "Arson, riot or serious violence", clash: "Clashes with police", peaceful: "Mostly peaceful" };
   var state = { era: "", region: "", sort: "new", violent: false, cat: "", nk: false, sel: null };
   var CN = window.CNOTES || {}, NK = null, nkG = null;
 
@@ -184,7 +185,7 @@
 
   function filtered() {
     return P.filter(function (d) {
-      return (!state.era || d.era === state.era) && (!state.region || d.region === state.region) && (!state.violent || d.level === "violent") && (!state.cat || d.cats.indexOf(state.cat) >= 0);
+      return (!state.era || d.era === state.era) && (!state.region || d.region === state.region) && (!state.violent || d.level === "violent" || d.level === "terror") && (!state.cat || d.cats.indexOf(state.cat) >= 0);
     }).sort(function (a, b) { return state.sort === "new" ? b.sortKey - a.sortKey : a.sortKey - b.sortKey; });
   }
 
@@ -268,11 +269,12 @@
   var listEl = document.getElementById("list");
   function update() {
     var list = filtered();
-    var c = { violent: 0, clash: 0, peaceful: 0 }, rallies = 0;
+    var c = { violent: 0, clash: 0, peaceful: 0, terror: 0 }, rallies = 0;
     list.forEach(function (d) { c[d.level]++; if (d.events) rallies += d.events; });
     var regions = d3.rollup(list, function (v) { return v.length; }, function (d) { return d.region; });
     document.getElementById("counts").innerHTML =
       "<span><b>" + list.length + "</b> protests and riots listed</span>" +
+      "<span><i class='dot terror'></i><b>" + c.terror + "</b> terrorist attacks</span>" +
       "<span><i class='dot violent'></i><b>" + c.violent + "</b> violent</span>" +
       "<span><i class='dot clash'></i><b>" + c.clash + "</b> clashes with police</span>" +
       "<span><i class='dot peaceful'></i><b>" + c.peaceful + "</b> mostly peaceful</span>" +
@@ -299,7 +301,7 @@
       el.querySelector("h2").textContent = d.name;
       el.querySelector(".what").textContent = d.what;
       el.querySelector(".cause").textContent = "Cause: " + d.cause;
-      el.querySelector(".crowd").innerHTML = "<b>Crowd:</b> " + (d.crowd ? d.crowd.replace(/[<>]/g, "") : "<span style='color:var(--muted)'>no reliable count recorded</span>");
+      el.querySelector(".crowd").innerHTML = "<b>" + (d.level === "terror" ? "Toll" : "Crowd") + ":</b> " + (d.crowd ? d.crowd.replace(/[<>]/g, "") : "<span style='color:var(--muted)'>no reliable count recorded</span>");
       el.querySelector(".chips").innerHTML = d.catLabels.map(function (c) { return "<span class='chip'>" + c + "</span>"; }).join("");
       if (CN[d.id]) {
         var det = document.createElement("details"); det.className = "cn";
