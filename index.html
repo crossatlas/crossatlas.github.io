@@ -37,7 +37,7 @@
     --green: #2e8b57;
     --fis-neg: #e5489b; --fis-pos: #22c3e6; --hot-mig: #0fb5a6; --hot-prot: #ff8a00; --hot-up: #b14cf0; --hot-down: #7d8fa6; --e-mig: #ffb000; --e-nat: #f4f4f4;
     --m-l: #ffb000; --m-lm: #19c7b0; --m-um: #b39dff; --neutral: #9aa3ab;
-    --p-violent: #ff7a1a; --p-clash: #ffd23f; --p-peaceful: #f4f4f4;
+    --p-violent: #ff7a1a; --p-clash: #ffd23f; --p-peaceful: #f4f4f4; --p-terror: #ff3df2;
     --f-display: "Newsreader", Georgia, "Times New Roman", serif;
     --f-ui: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   }
@@ -349,7 +349,7 @@
   <h1>Cross and Crescent Atlas</h1>
   <div class="hdr-actions">
     <button type="button" class="hbtn" id="layersbtn" aria-expanded="false" aria-controls="layers">Layers ▾</button>
-    <a class="hbtn link" href="tracker/">Protest tracker ↗</a>
+    <a class="hbtn link" href="tracker/">Protests, riots and terror attacks ↗</a>
     <a class="hbtn link" href="migration/">Migration map ↗</a>
   </div>
   <div class="legend" aria-label="Map key">
@@ -373,7 +373,7 @@
     <label><input type="checkbox" data-layer="faith" checked> Faith colors (blue, red, black)</label>
     <label><input type="checkbox" data-layer="muslim" checked> Modern Muslim share (red tint)</label>
     <label><input type="checkbox" data-layer="bars" checked> Country bar graphs</label>
-    <label><input type="checkbox" data-layer="protests"> Protests and riots <button type="button" id="protlistbtn" class="mini">List</button></label>
+    <label><input type="checkbox" data-layer="protests"> Protests, riots and terrorist attacks <button type="button" id="protlistbtn" class="mini">List</button></label>
     <label><input type="checkbox" data-layer="migration"> Migration flows</label>
     <div class="subgroup" id="migsub">
       <div class="subrow"><label><input type="checkbox" data-layer="migAll" checked> All migrants <span class="yrs">1990 to 2024</span></label><button type="button" class="info" data-info="infoAll" aria-expanded="false" aria-label="What is this?">?</button></div>
@@ -416,7 +416,7 @@
       <label><input type="checkbox" data-layer="hotPop"> <svg class="mk" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1L6 6H0z" transform="translate(0,0)" fill="var(--hot-up)"/><path d="M6 6h6l-3 5z" fill="var(--hot-down)"/></svg> Population changes, last 10 years</label>
       <button type="button" class="btn" id="hottablebtn" style="justify-self:start">Compare countries side by side</button>
     </div>
-    <div class="infotext" id="infoHot" hidden>Each measure has its own marker so they can be read together. <svg class="mk" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="4.6" fill="var(--hot-mig)" fill-opacity=".35" stroke="var(--hot-mig)" stroke-width="1.8"/></svg> <b>Migrant settlement:</b> a ring per country, sized by how many residents were born in low- and middle-income countries and filled more strongly the larger their share of the population (UN DESA migrant stock, 1990 to 2024, World Bank income groups). Zoom in on England and Wales to see 172 local areas: the share of residents born in Africa, the Middle East and Asia, or the Americas and Caribbean (2021 census; the Americas group also includes the U.S. and Canada). <svg class="mk" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M1 7c0-4 4-6 6-5s4 3 4 6-3 3-5 3-5 0-5-4z" fill="var(--hot-prot)" fill-opacity=".55" stroke="var(--hot-prot)"/></svg> <b>Protest hotspots:</b> glow where this atlas's protest list is densest over the 10 years up to the timeline year, weighted 3 for violent, 2 for clashes, 1 for peaceful. It reflects the events in this atlas, not every protest. <svg class="mk" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1L6 6H0z" transform="translate(0,0)" fill="var(--hot-up)"/><path d="M6 6h6l-3 5z" fill="var(--hot-down)"/></svg> <b>Population changes:</b> triangle up (purple) for growth, down (gray) for decline over the last 10 years, sized by the percentage (World Bank). Appearing together does not show that one causes the other.</div>
+    <div class="infotext" id="infoHot" hidden>Each measure has its own marker so they can be read together. <svg class="mk" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="4.6" fill="var(--hot-mig)" fill-opacity=".35" stroke="var(--hot-mig)" stroke-width="1.8"/></svg> <b>Migrant settlement:</b> a ring per country, sized by how many residents were born in low- and middle-income countries and filled more strongly the larger their share of the population (UN DESA migrant stock, 1990 to 2024, World Bank income groups). Zoom in on England and Wales to see 172 local areas: the share of residents born in Africa, the Middle East and Asia, or the Americas and Caribbean (2021 census; the Americas group also includes the U.S. and Canada). <svg class="mk" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M1 7c0-4 4-6 6-5s4 3 4 6-3 3-5 3-5 0-5-4z" fill="var(--hot-prot)" fill-opacity=".55" stroke="var(--hot-prot)"/></svg> <b>Protest hotspots:</b> glow where this atlas's protest list is densest over the 10 years up to the timeline year, weighted 3 for violent events and terrorist attacks, 2 for clashes, 1 for peaceful. It reflects the events in this atlas, not every protest. <svg class="mk" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1L6 6H0z" transform="translate(0,0)" fill="var(--hot-up)"/><path d="M6 6h6l-3 5z" fill="var(--hot-down)"/></svg> <b>Population changes:</b> triangle up (purple) for growth, down (gray) for decline over the last 10 years, sized by the percentage (World Bank). Appearing together does not show that one causes the other.</div>
     <div class="subrow"><label><input type="checkbox" data-layer="fiscal"> Migrant fiscal balance <span class="yrs">EU, 2015 on</span></label><button type="button" class="info" data-info="infoFiscal" aria-expanded="false" aria-label="What is this?">?</button></div>
     <div class="infotext" id="infoFiscal" hidden>Average yearly net fiscal contribution per person aged 15+, 2015 to 2019: taxes and social contributions paid minus cash benefits (welfare, pensions, unemployment) and public services such as health care and education. Circles show migrants born outside the EU: <i class="fdot" style="background:var(--fis-neg)"></i>deficit (receive more than they pay) or <i class="fdot" style="background:var(--fis-pos)"></i>surplus. Hover for natives and EU-born migrants. Source: European Commission Joint Research Centre (2020), 26 EU countries; no comparable figures exist for the U.S., U.K. or other countries.</div>
     <label><input type="checkbox" data-layer="places" checked> Historic places and battles</label>
@@ -425,7 +425,7 @@
   </div>
   <div id="protpanel" hidden role="dialog" aria-labelledby="proth">
     <div class="hd">
-      <div class="row"><h2 id="proth">Protests and riots</h2><button class="btn" id="protclose" type="button">Hide list</button></div>
+      <div class="row"><h2 id="proth">Protests, riots and terrorist attacks</h2><button class="btn" id="protclose" type="button">Hide list</button></div>
       <div class="row">
         <select id="protshow" aria-label="Which protests to list">
           <option value="now">On the map at this year</option>
@@ -456,6 +456,7 @@
           <option value="costofliving">Cost of living</option>
           <option value="socialism">Socialism-related</option>
           <option value="antisocialist">Against socialist or communist governments</option>
+          <option value="terror">Terrorist attacks</option>
         </select>
       </div>
       <div class="pcounts" id="pcounts"></div>
@@ -1135,7 +1136,7 @@
     var share = p && m != null ? m / p * 100 : null, share0 = p0 && m0 != null ? m0 / p0 * 100 : null;
     var prot = P.filter(function (e) { return e.y0 >= y - 10 && e.y0 <= y && hotCountry(e) === a; });
     return { y: y, y0: y0, pop: p, pop0: p0, chg: p && p0 && y > y0 ? (p - p0) / p0 * 100 : null, dev: m, share: share, share0: share0,
-      dshare: share != null && share0 != null && y > y0 ? share - share0 : null, prot: prot.length, violent: prot.filter(function (e) { return e.level === "violent"; }).length, protList: prot };
+      dshare: share != null && share0 != null && y > y0 ? share - share0 : null, prot: prot.length, violent: prot.filter(function (e) { return e.level === "violent" || e.level === "terror"; }).length, protList: prot };
   }
   // Which country an event happened in: the province polygon under its point, cached
   var protCountry = {};
@@ -1160,7 +1161,7 @@
     tipHTML(ev, "<div class='t'>" + esc(d.name) + " · " + yearLabel(Math.min(y, 2025)) + "</div>" +
       "<div>" + "<svg class=\"mk\" width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" aria-hidden=\"true\"><path d=\"M3 1L6 6H0z\" transform=\"translate(0,0)\" fill=\"var(--hot-up)\"/><path d=\"M6 6h6l-3 5z\" fill=\"var(--hot-down)\"/></svg>" + " Population: <b>" + popFmt(s.pop) + "</b>, " + (s.chg == null ? "n/a" : "<b class='" + (s.chg >= 0 ? "up" : "down") + "'>" + (s.chg >= 0 ? "▲ " : "▼ ") + pct(s.chg) + "</b>") + " since " + s.y0 + "</div>" +
       "<div>" + "<svg class=\"mk\" width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" aria-hidden=\"true\"><circle cx=\"6\" cy=\"6\" r=\"4.6\" fill=\"var(--hot-mig)\" fill-opacity=\".35\" stroke=\"var(--hot-mig)\" stroke-width=\"1.8\"/></svg>" + " Born in low- and middle-income countries: <b>" + (s.dev == null ? "n/a" : popFmt(s.dev)) + "</b>" + (s.share != null ? " (" + s.share.toFixed(1) + "% of residents" + (s.dshare != null ? ", " + (s.dshare >= 0 ? "▲ +" : "▼ ") + s.dshare.toFixed(1) + " points since " + s.y0 : "") + ")" : "") + "</div>" +
-      "<div>" + "<svg class=\"mk\" width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" aria-hidden=\"true\"><path d=\"M1 7c0-4 4-6 6-5s4 3 4 6-3 3-5 3-5 0-5-4z\" fill=\"var(--hot-prot)\" fill-opacity=\".55\" stroke=\"var(--hot-prot)\"/></svg>" + " Protests on this map, " + s.y0 + " to " + y + ": <b>" + s.prot + "</b>" + (s.violent ? " (" + s.violent + " violent)" : "") + "</div>" +
+      "<div>" + "<svg class=\"mk\" width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" aria-hidden=\"true\"><path d=\"M1 7c0-4 4-6 6-5s4 3 4 6-3 3-5 3-5 0-5-4z\" fill=\"var(--hot-prot)\" fill-opacity=\".55\" stroke=\"var(--hot-prot)\"/></svg>" + " Protests, riots and attacks on this map, " + s.y0 + " to " + y + ": <b>" + s.prot + "</b>" + (s.violent ? " (" + s.violent + " violent or terror attacks)" : "") + "</div>" +
       (s.protList.length ? "<div class='s'>" + s.protList.slice(0, 4).map(function (e) { return esc(e.name); }).join(" · ") + (s.protList.length > 4 ? " …" : "") + "</div>" : "") +
       "<div class='s' style='margin-top:3px'>World Bank population; UN DESA migrant stock. Shown side by side; this does not show cause and effect.</div>");
   }
@@ -1172,7 +1173,7 @@
     var key = y + ":" + (LAYERS.hotProt ? 1 : 0);
     if (LAYERS.hotProt && key !== hotKey) {
       hotKey = key;
-      var pts = P.filter(function (e) { return e.y0 >= y - 10 && e.y0 <= y; }).map(function (e) { var q = projection([e.lon, e.lat]); return q ? [q[0], q[1], e.level === "violent" ? 3 : e.level === "clash" ? 2 : 1] : null; }).filter(Boolean);
+      var pts = P.filter(function (e) { return e.y0 >= y - 10 && e.y0 <= y; }).map(function (e) { var q = projection([e.lon, e.lat]); return q ? [q[0], q[1], e.level === "violent" || e.level === "terror" ? 3 : e.level === "clash" ? 2 : 1] : null; }).filter(Boolean);
       var dens = function () { return d3.contourDensity().x(function (d) { return d[0]; }).y(function (d) { return d[1]; }).weight(function (d) { return d[2]; }).size([W, H]).bandwidth(7); };
       var probe = pts.length ? dens().thresholds(20)(pts) : [];
       var top = probe.length ? d3.max(probe, function (c) { return c.value; }) : 0;
@@ -1240,14 +1241,14 @@
       mig: function (s) { return -(s.share == null ? -1 : s.share); }, migd: function (s) { return -(s.dshare == null ? -1e9 : s.dshare); }, name: null }[sort];
     rows.sort(function (a, b) { return keyf ? keyf(a) - keyf(b) || a.name.localeCompare(b.name) : a.name.localeCompare(b.name); });
     var y0 = Math.max(1990, y - 10);
-    var h = "<table><thead><tr><th>Country</th><th>Population " + y + "</th><th><svg class=\"mk\" width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" aria-hidden=\"true\"><path d=\"M3 1L6 6H0z\" transform=\"translate(0,0)\" fill=\"var(--hot-up)\"/><path d=\"M6 6h6l-3 5z\" fill=\"var(--hot-down)\"/></svg><br>Change since " + y0 + "</th><th><svg class=\"mk\" width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" aria-hidden=\"true\"><circle cx=\"6\" cy=\"6\" r=\"4.6\" fill=\"var(--hot-mig)\" fill-opacity=\".35\" stroke=\"var(--hot-mig)\" stroke-width=\"1.8\"/></svg><br>Born in low- and middle-income countries</th><th>Change in share</th><th><svg class=\"mk\" width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" aria-hidden=\"true\"><path d=\"M1 7c0-4 4-6 6-5s4 3 4 6-3 3-5 3-5 0-5-4z\" fill=\"var(--hot-prot)\" fill-opacity=\".55\" stroke=\"var(--hot-prot)\"/></svg><br>Protests on map, " + y0 + " to " + y + "</th></tr></thead><tbody>";
+    var h = "<table><thead><tr><th>Country</th><th>Population " + y + "</th><th><svg class=\"mk\" width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" aria-hidden=\"true\"><path d=\"M3 1L6 6H0z\" transform=\"translate(0,0)\" fill=\"var(--hot-up)\"/><path d=\"M6 6h6l-3 5z\" fill=\"var(--hot-down)\"/></svg><br>Change since " + y0 + "</th><th><svg class=\"mk\" width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" aria-hidden=\"true\"><circle cx=\"6\" cy=\"6\" r=\"4.6\" fill=\"var(--hot-mig)\" fill-opacity=\".35\" stroke=\"var(--hot-mig)\" stroke-width=\"1.8\"/></svg><br>Born in low- and middle-income countries</th><th>Change in share</th><th><svg class=\"mk\" width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" aria-hidden=\"true\"><path d=\"M1 7c0-4 4-6 6-5s4 3 4 6-3 3-5 3-5 0-5-4z\" fill=\"var(--hot-prot)\" fill-opacity=\".55\" stroke=\"var(--hot-prot)\"/></svg><br>Protests, riots and attacks on map, " + y0 + " to " + y + "</th></tr></thead><tbody>";
     rows.forEach(function (s) {
       if (q && s.name.toLowerCase().indexOf(q) < 0) return;
       h += "<tr data-a='" + s.a + "'><td>" + esc(s.name) + "</td><td>" + popFmt(s.pop) + "</td>" +
         "<td class='" + (s.chg == null ? "" : s.chg >= 0 ? "up" : "down") + "'>" + (s.chg == null ? "n/a" : (s.chg >= 0 ? "▲ " : "▼ ") + pct(s.chg)) + "</td>" +
         "<td class='mg'>" + (s.share == null ? "n/a" : s.share.toFixed(1) + "%") + "</td>" +
         "<td class='" + (s.dshare == null ? "" : s.dshare >= 0 ? "up" : "down") + "'>" + (s.dshare == null ? "n/a" : (s.dshare >= 0 ? "▲ +" : "▼ ") + s.dshare.toFixed(1) + " pts") + "</td>" +
-        "<td class='pr'>" + (s.prot ? s.prot + (s.violent ? " (" + s.violent + " violent)" : "") : "–") + "</td></tr>";
+        "<td class='pr'>" + (s.prot ? s.prot + (s.violent ? " (" + s.violent + " violent or terror)" : "") : "–") + "</td></tr>";
     });
     document.getElementById("hottable").innerHTML = h + "</tbody></table>";
     document.getElementById("hotsubtxt").innerHTML = "Ten years to " + y + ". Each measure keeps its own marker: <svg class=\"mk\" width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" aria-hidden=\"true\"><path d=\"M3 1L6 6H0z\" transform=\"translate(0,0)\" fill=\"var(--hot-up)\"/><path d=\"M6 6h6l-3 5z\" fill=\"var(--hot-down)\"/></svg> population change (purple ▲ growth, gray ▼ decline), <svg class=\"mk\" width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" aria-hidden=\"true\"><circle cx=\"6\" cy=\"6\" r=\"4.6\" fill=\"var(--hot-mig)\" fill-opacity=\".35\" stroke=\"var(--hot-mig)\" stroke-width=\"1.8\"/></svg> residents born in low- and middle-income countries, <svg class=\"mk\" width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" aria-hidden=\"true\"><path d=\"M1 7c0-4 4-6 6-5s4 3 4 6-3 3-5 3-5 0-5-4z\" fill=\"var(--hot-prot)\" fill-opacity=\".55\" stroke=\"var(--hot-prot)\"/></svg> protests on this map." +
@@ -1382,11 +1383,12 @@
       if (mode === "upto") return d.y0 <= year;
       return true;
     }).slice().sort(function (a, b) { return b.sortKey - a.sortKey; });
-    var c = { violent: 0, clash: 0, peaceful: 0 }, extra = 0;
+    var c = { violent: 0, clash: 0, peaceful: 0, terror: 0 }, extra = 0;
     list.forEach(function (d) { c[d.level]++; if (d.events) extra += d.events; });
     var label = mode === "now" ? "on the map in " + yearLabel(year) : mode === "upto" ? "up to " + yearLabel(year) : "AD 60 to today";
     document.getElementById("pcounts").innerHTML =
       "<span><b>" + list.length + "</b> listed " + label + "</span>" +
+      "<span><i class='lv' style='background:var(--p-terror)'></i> <b>" + c.terror + "</b> terrorist attacks</span>" +
       "<span><i class='lv' style='background:var(--p-violent)'></i> <b>" + c.violent + "</b> violent</span>" +
       "<span><i class='lv' style='background:var(--p-clash)'></i> <b>" + c.clash + "</b> clashes</span>" +
       "<span><i class='lv' style='background:var(--p-peaceful);box-shadow:inset 0 0 0 1px var(--line)'></i> <b>" + c.peaceful + "</b> peaceful</span>" +
@@ -1402,7 +1404,7 @@
       el.className = "pitem"; el.id = "pi-" + d.id; el.tabIndex = 0;
       el.innerHTML = "<div class='pd'><i class='lv' style='background:var(--p-" + d.level + ");box-shadow:inset 0 0 0 1px var(--line)'></i>" + esc(d.dateLabel) + " · " + esc(d.place) + "</div>" +
         "<div class='pn'>" + esc(d.name) + "</div><div class='pw'>" + esc(d.what) + "</div>" +
-        "<div class='pw'><b>Crowd:</b> " + (d.crowd ? esc(d.crowd) : "<span style='color:var(--muted)'>no reliable count recorded</span>") + "</div>" +
+        "<div class='pw'><b>" + (d.level === "terror" ? "Toll" : "Crowd") + ":</b> " + (d.crowd ? esc(d.crowd) : "<span style='color:var(--muted)'>no reliable count recorded</span>") + "</div>" +
         "<div class='pw' style='color:var(--muted)'>Cause: " + esc(d.cause) + "</div>" +
         (d.catLabels.length ? "<div class='pw' style='color:var(--muted);font-size:11.5px'>" + d.catLabels.map(esc).join(" · ") + "</div>" : "") +
         "<div class='pl'></div>";

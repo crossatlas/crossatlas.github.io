@@ -1,4 +1,4 @@
-/* Protests, riots and revolts: Europe, the United States and the Roman Mediterranean, AD 60 to October 2026.
+/* Protests, riots, revolts and terrorist attacks: Europe, the United States and the Roman Mediterranean, AD 60 to October 2026.
    Shared by the Cross and Crescent Atlas and the Protest Tracker.
    Each entry: id, name, place, start/end ("YYYY", "YYYY-MM" or "YYYY-MM-DD"), lat, lon,
    region ("Europe" | "United States" | "Canada" | "Middle East" | "Latin America" | "Asia" | "Africa" | "Oceania" | "Mediterranean"), level ("violent" | "clash" | "peaceful"),
@@ -726,6 +726,134 @@ window.PROTESTS = (function () {
   add({ id: "iran2026", name: "Iranian protests and massacre", place: "Tehran and across Iran", start: "2025-12-28", end: "2026-01-20", lat: 35.69, lon: 51.39, region: "Middle East", level: "violent", cats: ["costofliving"], crowd: "Nationwide. Killed: at least 7,002 (rights group HRANA, February 2026); the government said 3,117",
         what: "Protests over the collapse of the currency spread nationwide; under an internet blackout, security forces carried out the deadliest crackdown in the Islamic Republic's history.", cause: "Currency collapse, prices and repression.", wiki: "2025–2026 Iranian protests", xq: "Iran protest" });
 
+
+  /* ---------------- Terrorist attacks (added October 2026). level "terror"; crowd holds the toll ---------------- */
+  function T(o) { o.level = "terror"; o.cats = (o.cats || []).concat(["terror"]); if (!o.xq) o.xq = o.place.split(",")[0] + " attack"; add(o); }
+  T({ id: "t-wallst1920", name: "Wall Street bombing", place: "New York City", start: "1920-09-16", lat: 40.707, lon: -74.011, region: "United States", crowd: "38 killed, hundreds injured",
+      what: "A horse-drawn wagon of explosives blew up outside J.P. Morgan's bank; the bombers were never caught.", cause: "Perpetrators: believed to be Italian anarchists." });
+  T({ id: "t-kingdavid", name: "King David Hotel bombing", place: "Jerusalem", start: "1946-07-22", lat: 31.774, lon: 35.222, region: "Middle East", crowd: "91 killed",
+      what: "The Zionist group Irgun bombed the British administrative headquarters in the hotel.", cause: "Perpetrators: Irgun. Aim: end British rule in Palestine." });
+  T({ id: "t-munich1972", name: "Munich Olympics massacre", place: "Munich, West Germany", start: "1972-09-05", end: "1972-09-06", lat: 48.175, lon: 11.55, region: "Europe", crowd: "11 Israeli team members and 1 West German police officer killed",
+      what: "Palestinian gunmen took the Israeli Olympic team hostage; a failed rescue at the airfield ended with all hostages dead.", cause: "Perpetrators: Black September (Palestinian)." });
+  T({ id: "t-bloodyfriday", name: "Bloody Friday", place: "Belfast, Northern Ireland", start: "1972-07-21", lat: 54.597, lon: -5.93, region: "Europe", crowd: "9 killed, about 130 injured",
+      what: "The IRA set off about 20 bombs across Belfast in 80 minutes.", cause: "Perpetrators: Provisional IRA, during the Troubles." });
+  T({ id: "t-birmingham1974", name: "Birmingham pub bombings", place: "Birmingham, England", start: "1974-11-21", lat: 52.479, lon: -1.9, region: "Europe", crowd: "21 killed, 182 injured",
+      what: "Bombs destroyed two crowded pubs; six men wrongly convicted were freed in 1991.", cause: "Perpetrators: Provisional IRA." });
+  T({ id: "t-bologna1980", name: "Bologna station bombing", place: "Bologna, Italy", start: "1980-08-02", lat: 44.506, lon: 11.343, region: "Europe", cats: ["fascist"], crowd: "85 killed, over 200 injured",
+      what: "A bomb in the station waiting room, Italy's deadliest attack since the war.", cause: "Perpetrators: neo-fascist militants (Armed Revolutionary Nuclei) were convicted." });
+  T({ id: "t-beirut1983", name: "Beirut barracks bombings", place: "Beirut, Lebanon", start: "1983-10-23", lat: 33.83, lon: 35.49, region: "Middle East", crowd: "307 killed: 241 U.S. and 58 French service members, plus civilians",
+      what: "Two truck bombs hit the U.S. Marine and French barracks of the peacekeeping force.", cause: "Perpetrators: Islamic Jihad, widely linked to Hezbollah and Iran." });
+  T({ id: "t-airindia1985", name: "Air India Flight 182", place: "Off the coast of Ireland", start: "1985-06-23", lat: 51.06, lon: -12.82, region: "Europe", crowd: "329 killed",
+      what: "A bomb loaded in Canada destroyed the airliner over the Atlantic; most victims were Canadians.", cause: "Perpetrators: Sikh separatists (Babbar Khalsa).", xq: "\"Air India\" 182" });
+  T({ id: "t-lockerbie", name: "Lockerbie bombing", place: "Lockerbie, Scotland", start: "1988-12-21", lat: 55.12, lon: -3.35, region: "Europe", crowd: "270 killed (259 on board, 11 on the ground)",
+      what: "A bomb destroyed Pan Am Flight 103 over Scotland.", cause: "Perpetrators: Libyan intelligence officers; Libya later paid compensation." });
+  T({ id: "t-wtc1993", name: "World Trade Center bombing", place: "New York City", start: "1993-02-26", lat: 40.711, lon: -74.013, region: "United States", crowd: "6 killed, over 1,000 injured",
+      what: "A truck bomb in the North Tower's garage failed to bring the tower down.", cause: "Perpetrators: Islamist group led by Ramzi Yousef." });
+  T({ id: "t-tokyo1995", name: "Tokyo subway sarin attack", place: "Tokyo, Japan", start: "1995-03-20", lat: 35.676, lon: 139.764, region: "Asia", crowd: "14 killed, thousands sickened",
+      what: "Cult members released nerve gas on five subway trains at rush hour.", cause: "Perpetrators: Aum Shinrikyo cult." });
+  T({ id: "t-okc1995", name: "Oklahoma City bombing", place: "Oklahoma City, Oklahoma", start: "1995-04-19", lat: 35.473, lon: -97.517, region: "United States", crowd: "168 killed, including 19 children",
+      what: "A truck bomb destroyed the Alfred P. Murrah Federal Building.", cause: "Perpetrators: Timothy McVeigh and Terry Nichols, anti-government extremists." });
+  T({ id: "t-embassies1998", name: "U.S. embassy bombings", place: "Nairobi, Kenya and Dar es Salaam, Tanzania", start: "1998-08-07", lat: -1.289, lon: 36.82, region: "Africa", crowd: "224 killed, about 4,500 injured",
+      what: "Simultaneous truck bombs at two U.S. embassies.", cause: "Perpetrators: al-Qaeda." });
+  T({ id: "t-omagh", name: "Omagh bombing", place: "Omagh, Northern Ireland", start: "1998-08-15", lat: 54.6, lon: -7.3, region: "Europe", crowd: "29 killed, about 220 injured",
+      what: "A car bomb in the town center, the deadliest single attack of the Troubles, months after the peace agreement.", cause: "Perpetrators: Real IRA." });
+  T({ id: "t-911", name: "September 11 attacks", place: "New York City, Washington area and Pennsylvania", start: "2001-09-11", lat: 40.712, lon: -74.013, region: "United States", crowd: "2,977 killed",
+      what: "Hijacked airliners destroyed the World Trade Center and hit the Pentagon; a fourth crashed in Pennsylvania.", cause: "Perpetrators: al-Qaeda.", xq: "\"9/11\" OR \"September 11\"" });
+  T({ id: "t-bali2002", name: "Bali bombings", place: "Kuta, Bali, Indonesia", start: "2002-10-12", lat: -8.718, lon: 115.169, region: "Asia", crowd: "202 killed, including 88 Australians",
+      what: "Bombs at two nightclubs in a tourist district.", cause: "Perpetrators: Jemaah Islamiyah." });
+  T({ id: "t-moscow2002", name: "Moscow theater hostage crisis", place: "Moscow, Russia", start: "2002-10-23", end: "2002-10-26", lat: 55.725, lon: 37.67, region: "Europe", crowd: "About 130 hostages killed, most by the gas used in the rescue",
+      what: "Chechen militants seized about 850 people at a theater; special forces pumped in a chemical agent before storming it.", cause: "Perpetrators: Chechen separatists." });
+  T({ id: "t-madrid2004", name: "Madrid train bombings", place: "Madrid, Spain", start: "2004-03-11", lat: 40.406, lon: -3.689, region: "Europe", crowd: "193 killed, about 2,000 injured",
+      what: "Ten bombs exploded on four commuter trains at rush hour, three days before an election.", cause: "Perpetrators: jihadist cell inspired by al-Qaeda." });
+  T({ id: "t-beslan", name: "Beslan school siege", place: "Beslan, North Ossetia, Russia", start: "2004-09-01", end: "2004-09-03", lat: 43.19, lon: 44.54, region: "Europe", crowd: "334 killed, including 186 children",
+      what: "Militants held over 1,100 people at a school on the first day of term; the siege ended in explosions and gunfire.", cause: "Perpetrators: Chechen separatists led by Shamil Basayev." });
+  T({ id: "t-london2005", name: "7 July London bombings", place: "London, England", start: "2005-07-07", lat: 51.52, lon: -0.11, region: "Europe", crowd: "52 killed, over 700 injured",
+      what: "Four suicide bombers attacked three Underground trains and a bus.", cause: "Perpetrators: British Islamist suicide bombers.", xq: "\"7/7\" London" });
+  T({ id: "t-mumbai2008", name: "Mumbai attacks", place: "Mumbai, India", start: "2008-11-26", end: "2008-11-29", lat: 18.922, lon: 72.833, region: "Asia", crowd: "166 killed",
+      what: "Ten gunmen arriving by sea attacked a train station, hotels, a café and a Jewish center over four days.", cause: "Perpetrators: Lashkar-e-Taiba (Pakistan-based)." });
+  T({ id: "t-norway2011", name: "Norway attacks", place: "Oslo and Utøya, Norway", start: "2011-07-22", lat: 59.91, lon: 10.75, region: "Europe", cats: ["fascist"], crowd: "77 killed, most of them teenagers at a youth camp",
+      what: "A car bomb hit government buildings in Oslo, then the attacker shot young people at a Labour Party camp on Utøya.", cause: "Perpetrator: Anders Behring Breivik, far-right extremist.", xq: "Oslo OR Utøya" });
+  T({ id: "t-boston2013", name: "Boston Marathon bombing", place: "Boston, Massachusetts", start: "2013-04-15", lat: 42.35, lon: -71.078, region: "United States", crowd: "3 killed and over 260 injured; a police officer was killed days later",
+      what: "Two pressure-cooker bombs exploded near the finish line.", cause: "Perpetrators: brothers Dzhokhar and Tamerlan Tsarnaev, Islamist-inspired." });
+  T({ id: "t-westgate", name: "Westgate shopping mall attack", place: "Nairobi, Kenya", start: "2013-09-21", end: "2013-09-24", lat: -1.257, lon: 36.803, region: "Africa", crowd: "67 killed",
+      what: "Gunmen attacked a crowded mall; a siege lasted four days.", cause: "Perpetrators: al-Shabaab." });
+  T({ id: "t-chibok", name: "Chibok schoolgirls kidnapping", place: "Chibok, Nigeria", start: "2014-04-14", lat: 10.87, lon: 12.85, region: "Africa", crowd: "276 schoolgirls abducted; dozens are still missing",
+      what: "Militants seized girls from a boarding school, prompting the #BringBackOurGirls campaign.", cause: "Perpetrators: Boko Haram." });
+  T({ id: "t-peshawar2014", name: "Peshawar school massacre", place: "Peshawar, Pakistan", start: "2014-12-16", lat: 34.0, lon: 71.53, region: "Asia", crowd: "149 killed, 132 of them children",
+      what: "Gunmen attacked the Army Public School.", cause: "Perpetrators: Pakistani Taliban (TTP)." });
+  T({ id: "t-charliehebdo", name: "Charlie Hebdo attack", place: "Paris, France", start: "2015-01-07", end: "2015-01-09", lat: 48.859, lon: 2.37, region: "Europe", crowd: "12 killed at the magazine; 5 more in related attacks, including 4 at a kosher supermarket",
+      what: "Gunmen attacked the satirical magazine's office over its cartoons of Muhammad.", cause: "Perpetrators: al-Qaeda in the Arabian Peninsula (brothers Kouachi) and an Islamic State supporter.", xq: "\"Charlie Hebdo\"" });
+  T({ id: "t-garissa", name: "Garissa University attack", place: "Garissa, Kenya", start: "2015-04-02", lat: -0.45, lon: 39.65, region: "Africa", crowd: "148 killed, most of them students",
+      what: "Gunmen separated Christian students and killed them.", cause: "Perpetrators: al-Shabaab." });
+  T({ id: "t-ankara2015", name: "Ankara railway station bombings", place: "Ankara, Turkey", start: "2015-10-10", lat: 39.94, lon: 32.84, region: "Europe", crowd: "109 killed",
+      what: "Two suicide bombers struck a peace rally of left-wing and pro-Kurdish groups.", cause: "Perpetrators: Islamic State." });
+  T({ id: "t-paris2015", name: "November 2015 Paris attacks", place: "Paris and Saint-Denis, France", start: "2015-11-13", lat: 48.863, lon: 2.37, region: "Europe", crowd: "130 killed, over 400 injured",
+      what: "Coordinated shootings and suicide bombings at the Bataclan concert hall, cafés and the national stadium.", cause: "Perpetrators: Islamic State.", xq: "Bataclan OR \"Paris attacks\"" });
+  T({ id: "t-sanbernardino", name: "San Bernardino attack", place: "San Bernardino, California", start: "2015-12-02", lat: 34.075, lon: -117.277, region: "United States", crowd: "14 killed",
+      what: "A married couple opened fire at a county health department holiday party.", cause: "Perpetrators: Syed Rizwan Farook and Tashfeen Malik, Islamic State-inspired." });
+  T({ id: "t-brussels2016", name: "Brussels bombings", place: "Brussels, Belgium", start: "2016-03-22", lat: 50.9, lon: 4.48, region: "Europe", crowd: "32 killed, over 300 injured",
+      what: "Suicide bombings at Zaventem airport and Maalbeek metro station.", cause: "Perpetrators: Islamic State (same network as the Paris attacks)." });
+  T({ id: "t-orlando", name: "Pulse nightclub shooting", place: "Orlando, Florida", start: "2016-06-12", lat: 28.519, lon: -81.377, region: "United States", crowd: "49 killed, 53 injured",
+      what: "A gunman attacked a gay nightclub; then the deadliest mass shooting by one person in U.S. history.", cause: "Perpetrator: Omar Mateen, who pledged allegiance to the Islamic State." });
+  T({ id: "t-istanbul2016", name: "Istanbul Atatürk Airport attack", place: "Istanbul, Turkey", start: "2016-06-28", lat: 40.98, lon: 28.82, region: "Europe", crowd: "45 killed",
+      what: "Gunmen and suicide bombers attacked the international terminal.", cause: "Perpetrators: Islamic State (suspected; no claim)." });
+  T({ id: "t-nice2016", name: "Nice truck attack", place: "Nice, France", start: "2016-07-14", lat: 43.695, lon: 7.265, region: "Europe", crowd: "86 killed, 434 injured",
+      what: "A truck was driven into Bastille Day crowds on the Promenade des Anglais.", cause: "Perpetrator: Mohamed Lahouaiej-Bouhlel; Islamic State claimed it." });
+  T({ id: "t-berlin2016", name: "Berlin Christmas market attack", place: "Berlin, Germany", start: "2016-12-19", lat: 52.505, lon: 13.335, region: "Europe", crowd: "13 killed (one died later), 55 injured",
+      what: "A hijacked truck was driven into the market at Breitscheidplatz.", cause: "Perpetrator: Anis Amri, a rejected Tunisian asylum seeker; Islamic State claimed it." });
+  T({ id: "t-manchester2017", name: "Manchester Arena bombing", place: "Manchester, England", start: "2017-05-22", lat: 53.488, lon: -2.244, region: "Europe", crowd: "22 killed, many of them children; over 1,000 injured",
+      what: "A suicide bomber struck as fans left an Ariana Grande concert.", cause: "Perpetrator: Salman Abedi, Islamist." });
+  T({ id: "t-barcelona2017", name: "Barcelona and Cambrils attacks", place: "Barcelona, Spain", start: "2017-08-17", end: "2017-08-18", lat: 41.381, lon: 2.173, region: "Europe", crowd: "16 killed, over 130 injured",
+      what: "A van was driven down Las Ramblas; a second attack hit Cambrils hours later.", cause: "Perpetrators: jihadist cell; Islamic State claimed it.", xq: "Ramblas OR Barcelona attack" });
+  T({ id: "t-mogadishu2017", name: "Mogadishu truck bombing", place: "Mogadishu, Somalia", start: "2017-10-14", lat: 2.04, lon: 45.34, region: "Africa", crowd: "587 killed",
+      what: "A truck bomb in a busy junction, one of the deadliest single bombings ever.", cause: "Perpetrators: al-Shabaab (widely blamed; no claim)." });
+  T({ id: "t-nyc2017", name: "New York City truck attack", place: "New York City", start: "2017-10-31", lat: 40.718, lon: -74.013, region: "United States", crowd: "8 killed, 11 injured",
+      what: "A rented truck was driven down a bike path in Lower Manhattan.", cause: "Perpetrator: Sayfullo Saipov, Islamic State-inspired." });
+  T({ id: "t-sinai2017", name: "Sinai mosque attack", place: "Bir al-Abed, Egypt", start: "2017-11-24", lat: 31.02, lon: 33.0, region: "Africa", crowd: "311 killed",
+      what: "Gunmen attacked a Sufi mosque during Friday prayers.", cause: "Perpetrators: Islamic State Sinai Province (suspected)." });
+  T({ id: "t-pittsburgh", name: "Pittsburgh synagogue shooting", place: "Pittsburgh, Pennsylvania", start: "2018-10-27", lat: 40.443, lon: -79.922, region: "United States", cats: ["fascist"], crowd: "11 killed",
+      what: "A gunman attacked the Tree of Life synagogue during Sabbath services, the deadliest attack on Jews in U.S. history.", cause: "Perpetrator: Robert Bowers, antisemitic white supremacist." });
+  T({ id: "t-christchurch", name: "Christchurch mosque shootings", place: "Christchurch, New Zealand", start: "2019-03-15", lat: -43.532, lon: 172.61, region: "Oceania", cats: ["fascist"], crowd: "51 killed",
+      what: "A gunman attacked two mosques and livestreamed it; New Zealand banned most semi-automatic weapons.", cause: "Perpetrator: Brenton Tarrant, white supremacist." });
+  T({ id: "t-srilanka2019", name: "Sri Lanka Easter bombings", place: "Colombo, Negombo and Batticaloa, Sri Lanka", start: "2019-04-21", lat: 6.95, lon: 79.86, region: "Asia", crowd: "269 killed",
+      what: "Suicide bombers struck three churches and three luxury hotels on Easter Sunday.", cause: "Perpetrators: National Thowheeth Jama'ath; Islamic State claimed it.", xq: "\"Sri Lanka\" Easter attack" });
+  T({ id: "t-elpaso", name: "El Paso Walmart shooting", place: "El Paso, Texas", start: "2019-08-03", lat: 31.77, lon: -106.38, region: "United States", cats: ["fascist"], crowd: "23 killed",
+      what: "A gunman targeting Hispanics attacked a Walmart.", cause: "Perpetrator: Patrick Crusius, anti-immigrant white nationalist." });
+  T({ id: "t-hanau", name: "Hanau shootings", place: "Hanau, Germany", start: "2020-02-19", lat: 50.13, lon: 8.92, region: "Europe", cats: ["fascist"], crowd: "9 killed (plus the attacker's mother)",
+      what: "A gunman attacked two shisha bars, targeting people of immigrant background.", cause: "Perpetrator: Tobias Rathjen, far-right racist." });
+  T({ id: "t-paty", name: "Murder of Samuel Paty", place: "Conflans-Sainte-Honorine, France", start: "2020-10-16", lat: 48.99, lon: 2.1, region: "Europe", crowd: "1 killed",
+      what: "A teacher who had shown cartoons of Muhammad in a free-speech class was beheaded near his school.", cause: "Perpetrator: Abdoullakh Anzorov, Islamist.", xq: "\"Samuel Paty\"" });
+  T({ id: "t-vienna2020", name: "Vienna attack", place: "Vienna, Austria", start: "2020-11-02", lat: 48.211, lon: 16.374, region: "Europe", crowd: "4 killed, 23 injured",
+      what: "A gunman opened fire in the city center on the eve of a lockdown.", cause: "Perpetrator: Kujtim Fejzulai, Islamic State supporter." });
+  T({ id: "t-kabul2021", name: "Kabul airport bombing", place: "Kabul, Afghanistan", start: "2021-08-26", lat: 34.565, lon: 69.21, region: "Asia", crowd: "About 170 Afghans and 13 U.S. service members killed",
+      what: "A suicide bomber struck crowds at the airport gate during the evacuation after the Taliban takeover.", cause: "Perpetrators: Islamic State Khorasan Province (ISIS-K)." });
+  T({ id: "t-buffalo", name: "Buffalo supermarket shooting", place: "Buffalo, New York", start: "2022-05-14", lat: 42.91, lon: -78.85, region: "United States", cats: ["fascist"], crowd: "10 killed",
+      what: "A gunman targeted Black shoppers at a supermarket and livestreamed it.", cause: "Perpetrator: Payton Gendron, white supremacist." });
+  T({ id: "t-oct7", name: "October 7 Hamas attack on Israel", place: "Southern Israel near Gaza", start: "2023-10-07", lat: 31.4, lon: 34.5, region: "Middle East", cats: ["palestine"], crowd: "About 1,200 killed, mostly civilians; 251 taken hostage",
+      what: "Hamas-led gunmen broke through the Gaza fence and attacked towns, kibbutzim and a music festival; the Gaza war followed.", cause: "Perpetrators: Hamas and allied groups.", xq: "\"October 7\" Hamas attack" });
+  T({ id: "t-kerman2024", name: "Kerman bombings", place: "Kerman, Iran", start: "2024-01-03", lat: 30.28, lon: 57.08, region: "Middle East", crowd: "About 95 killed",
+      what: "Two bombs hit a memorial procession for General Qassem Soleimani.", cause: "Perpetrators: Islamic State Khorasan Province." });
+  T({ id: "t-crocus", name: "Crocus City Hall attack", place: "Krasnogorsk, near Moscow, Russia", start: "2024-03-22", lat: 55.825, lon: 37.39, region: "Europe", crowd: "145 killed, over 550 injured",
+      what: "Gunmen attacked a concert hall and set it on fire.", cause: "Perpetrators: Islamic State Khorasan Province.", xq: "\"Crocus City Hall\"" });
+  T({ id: "t-solingen", name: "Solingen stabbing", place: "Solingen, Germany", start: "2024-08-23", lat: 51.17, lon: 7.08, region: "Europe", crowd: "3 killed, 8 injured",
+      what: "A man stabbed people at a city festival; he was a Syrian whose deportation had failed.", cause: "Perpetrator: Issa al-H., Islamic State claimed it." });
+  T({ id: "t-magdeburg", name: "Magdeburg Christmas market attack", place: "Magdeburg, Germany", start: "2024-12-20", lat: 52.13, lon: 11.64, region: "Europe", crowd: "6 killed, about 300 injured",
+      what: "A car was driven through the Christmas market.", cause: "Perpetrator: Taleb al-Abdulmohsen, a Saudi-born doctor with anti-Islam and anti-government views." });
+  T({ id: "t-neworleans", name: "New Orleans truck attack", place: "New Orleans, Louisiana", start: "2025-01-01", lat: 29.958, lon: -90.065, region: "United States", crowd: "14 killed, dozens injured",
+      what: "A pickup truck was driven into New Year's crowds on Bourbon Street.", cause: "Perpetrator: Shamsud-Din Jabbar, U.S. Army veteran inspired by the Islamic State.", xq: "\"Bourbon Street\" attack" });
+  T({ id: "t-munich2025", name: "Munich car-ramming", place: "Munich, Germany", start: "2025-02-13", lat: 48.14, lon: 11.56, region: "Europe", crowd: "2 killed (a mother and child), about 40 injured",
+      what: "A car was driven into a union march.", cause: "Perpetrator: an Afghan asylum seeker; prosecutors cited a religious motive." });
+  T({ id: "t-pahalgam", name: "Pahalgam attack", place: "Pahalgam, Kashmir, India", start: "2025-04-22", lat: 34.01, lon: 75.32, region: "Asia", crowd: "26 killed, mostly Hindu tourists",
+      what: "Gunmen shot tourists in a meadow; India and Pakistan fought a short conflict in May.", cause: "Perpetrators: The Resistance Front (linked to Lashkar-e-Taiba), per India." });
+  T({ id: "t-bondi", name: "Bondi Beach Hanukkah attack", place: "Sydney, Australia", start: "2025-12-14", lat: -33.891, lon: 151.277, region: "Oceania", crowd: "At least 15 killed (early official counts ranged from 10 to 16)",
+      what: "Two gunmen opened fire on a Hanukkah celebration at Bondi Beach; one was shot dead by police.", cause: "Antisemitic terrorist attack; police said one gunman was known to security services.", xq: "Bondi attack" });
+  T({ id: "t-kwara2026", name: "Kwara State massacre", place: "Nuku and Woro, Kwara State, Nigeria", start: "2026-02-03", end: "2026-02-04", lat: 8.97, lon: 4.38, region: "Africa", crowd: "200+ killed",
+      what: "Attackers killed villagers in two communities.", cause: "Perpetrators: Islamic State, Boko Haram or Lakurawa (disputed)." });
+  T({ id: "t-islamabad2026", name: "Islamabad suicide bombing", place: "Islamabad, Pakistan", start: "2026-02-06", lat: 33.69, lon: 73.05, region: "Asia", crowd: "31 killed",
+      what: "A suicide bombing in the capital.", cause: "Perpetrators: Islamic State Pakistan Province." });
+  T({ id: "t-quetta2026", name: "Quetta attack", place: "Quetta, Pakistan", start: "2026-05-24", lat: 30.18, lon: 66.99, region: "Asia", crowd: "47+ killed",
+      what: "A deadly attack in Balochistan's capital during a year of rising separatist violence.", cause: "Perpetrators: Balochistan Liberation Army." });
+
   /* Crowd sizes: best documented estimate, with who made it where sources differ. Blank = no reliable count. */
   var CROWD = {
     boudica: "Tens of thousands of rebels (a Roman historian's figure of 230,000 is considered exaggerated)",
@@ -829,7 +957,7 @@ window.PROTESTS = (function () {
   E.forEach(function (e) { e.crowd = CROWD[e.id] || e.crowd || ""; });
 
   /* Category tags for filters */
-  var CATS = { left: "Left-wing (all)", communist: "Communist and socialist takeovers", fascist: "Fascist, Nazi and far-right", ice: "Anti-ICE", blm: "Black Lives Matter", palestine: "Pro-Palestinian", nokings: "No Kings", costofliving: "Cost of living", socialism: "Socialism-related", antisocialist: "Against socialist or communist governments" };
+  var CATS = { left: "Left-wing (all)", communist: "Communist and socialist takeovers", fascist: "Fascist, Nazi and far-right", ice: "Anti-ICE", blm: "Black Lives Matter", palestine: "Pro-Palestinian", nokings: "No Kings", costofliving: "Cost of living", socialism: "Socialism-related", antisocialist: "Against socialist or communist governments", terror: "Terrorist attacks" };
   var TAG = {
     ice: "la2025 broadview2025 mpls2026 iceout bushwick delaney indy bronx salem",
     blm: "ferguson baltimore floyd",
