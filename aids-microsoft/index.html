@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0;font-size:14px}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>AIDS & Microsoft Atlas</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,650&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: Atlas-style — header, labeled event bands with chart below, bottom dock with year + slider */
+:root {
+  --bg: #eceef0; --panel: #fafbfb; --ink: #18202a; --muted: #5b6571; --line: #d3d8de;
+  --aids: #c23a30; --treat: #0f8f7a; --culture: #b07610; --msprod: #2459b3; --msbiz: #7a4fd0;
+  --conv: #2e8b57; --deaths: #c23a30; --rev: #2459b3; --focus: #2459b3;
+  --f-display: "Newsreader", Georgia, "Times New Roman", serif;
+  --f-ui: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #111418; --panel: #181c21; --ink: #e5e8eb; --muted: #9aa3ad; --line: #2b3239;
+  --aids: #e05a4f; --treat: #27b89e; --culture: #d9a033; --msprod: #4d82dd; --msbiz: #a07ff0;
+  --conv: #3fb56f; --deaths: #e05a4f; --rev: #4d82dd; --focus: #6d9be6; color-scheme: dark;
+}}
+:root[data-theme="dark"] {
+  --bg: #111418; --panel: #181c21; --ink: #e5e8eb; --muted: #9aa3ad; --line: #2b3239;
+  --aids: #e05a4f; --treat: #27b89e; --culture: #d9a033; --msprod: #4d82dd; --msbiz: #a07ff0;
+  --conv: #3fb56f; --deaths: #e05a4f; --rev: #4d82dd; --focus: #6d9be6; color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-ui); font-size: 14px; display: flex; flex-direction: column; overflow: hidden; }
+#hdr { display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding-block: 10px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  border-bottom: 1px solid var(--line); background: var(--panel); }
+#hdr h1 { font-family: var(--f-display); font-weight: 650; font-size: 20px; margin: 0; line-height: 1.1; }
+#hdr .sub { font-size: 11.5px; color: var(--muted); flex: 1 1 220px; min-width: 0; line-height: 1.35; }
+.btn { height: 32px; min-width: 32px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--line);
+  background: var(--bg); color: var(--ink); cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+  gap: 6px; font: inherit; font-size: 13px; }
+.btn.primary { background: var(--ink); color: var(--panel); border-color: var(--ink); min-width: 74px; font-weight: 600; }
+.btn:focus-visible, input:focus-visible, button:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; }
+#stagewrap { position: relative; flex: 1 1 auto; min-height: 0; }
+#stage { position: absolute; inset: 0; }
+#stage svg { display: block; width: 100%; height: 100%; }
+#layers { position: absolute; z-index: 6; top: 8px; left: calc(8px + env(safe-area-inset-left, 0px));
+  width: min(320px, calc(100% - 16px)); max-height: calc(100% - 16px); overflow: auto;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,.22);
+  padding: 10px 12px; display: grid; gap: 7px; font-size: 13px; }
+#layers .lh { font-family: var(--f-display); font-weight: 650; font-size: 16px; }
+#layers .lh span { font-family: var(--f-ui); font-weight: 400; font-size: 11.5px; color: var(--muted); margin-left: 4px; }
+#layers label { display: flex; align-items: center; gap: 7px; cursor: pointer; }
+.subrow { display: flex; align-items: center; gap: 6px; }
+.subrow label { flex: 1 1 auto; }
+.yrs { font-size: 11px; color: var(--muted); }
+.info { width: 20px; height: 20px; border-radius: 50%; border: 1px solid var(--line); background: var(--bg); color: var(--ink);
+  font: inherit; font-size: 11.5px; font-weight: 700; cursor: pointer; padding: 0; line-height: 1; flex: 0 0 auto; }
+.info[aria-expanded="true"] { background: var(--ink); color: var(--panel); }
+.infotext { font-size: 11.5px; color: var(--muted); line-height: 1.45; background: var(--bg); border-radius: 6px; padding: 6px 8px; }
+.dot { width: 11px; height: 11px; border-radius: 50%; flex: 0 0 auto; }
+.dia { width: 10px; height: 10px; transform: rotate(45deg); border-radius: 2px; flex: 0 0 auto; }
+#tip { position: absolute; pointer-events: none; z-index: 7; background: var(--panel); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 7px; padding: 7px 10px; font-size: 12.5px; line-height: 1.4; max-width: 280px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.2); }
+#tip .t { font-weight: 600; font-size: 13px; }
+#tip .s { color: var(--muted); }
+#about, #evpanel { position: absolute; z-index: 8; inset: 12px; margin: auto; max-width: 620px; max-height: calc(100% - 24px);
+  overflow: auto; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 10px;
+  padding: 14px 16px; box-shadow: 0 10px 40px rgba(0,0,0,.3); font-size: 13px; line-height: 1.5; height: fit-content; }
+#about h2, #evpanel h2 { font-family: var(--f-display); font-size: 18px; margin: 0 0 6px; }
+#about h3 { font-size: 13px; margin: 12px 0 2px; }
+#about p { margin: 4px 0; }
+#evpanel table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+#evpanel td { padding: 5px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+#evpanel tr { cursor: pointer; }
+#evpanel tr:hover td { background: var(--bg); }
+#evpanel td.y { font-variant-numeric: tabular-nums; color: var(--muted); white-space: nowrap; }
+.tag { font-size: 10.5px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; border-radius: 4px; padding: 1px 6px; white-space: nowrap; }
+#dock { border-top: 1px solid var(--line); background: var(--panel);
+  padding-block: 8px 10px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+#dock .row1 { display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+#dock .controls { display: flex; gap: 6px; }
+.year { font-family: var(--f-display); font-weight: 650; font-size: 30px; line-height: 1.1;
+  font-variant-numeric: tabular-nums lining-nums; min-width: 3.1ch; }
+.caption { flex: 1 1 260px; min-width: 0; }
+.caption .ev { font-family: var(--f-display); font-weight: 650; font-size: 16px; }
+.caption .ev .when { font-family: var(--f-ui); font-weight: 500; font-size: 12px; color: var(--muted); margin-left: 6px; }
+.caption .ev .tag { font-family: var(--f-ui); vertical-align: 2px; margin-left: 6px; }
+.caption .desc { color: var(--muted); font-size: 12.8px; line-height: 1.4; margin-top: 2px; }
+#sliderwrap { margin-top: 6px; position: relative; }
+#ruler { display: block; width: 100%; height: 18px; }
+input[type=range] { width: 100%; margin: 0; accent-color: var(--ink); height: 22px; display: block; }
+@media (max-width: 560px) {
+  #hdr h1 { font-size: 17px; }
+  #hdr .sub { display: none; }
+  .year { font-size: 24px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div id="hdr">
+  <h1>AIDS &amp; Microsoft Atlas</h1>
+  <div class="sub">Every labeled dot is an event with its date. Red area below: US deaths per year. Blue line: Microsoft revenue. Drag the year or press play.</div>
+  <button class="btn" id="layersbtn" aria-expanded="false">Layers</button>
+  <button class="btn" id="evbtn">All events</button>
+  <button class="btn" id="aboutbtn">About</button>
+  <button class="btn" id="themebtn" aria-label="Switch theme">◐</button>
+</div>
+
+<div id="stagewrap">
+  <div id="stage"></div>
+
+  <div id="layers" hidden>
+    <div class="lh">Layers <span>show or hide</span></div>
+    <div class="subrow"><label><input type="checkbox" data-layer="ep" checked> <span class="dot" style="background:var(--aids)"></span> Epidemic milestones</label><button type="button" class="info" data-info="infoEp" aria-expanded="false" aria-label="What is this?">?</button></div>
+    <div class="infotext" id="infoEp" hidden>Key moments in the course of the epidemic itself: the first CDC report, the naming of AIDS, the isolation of HIV, the deadliest years, and the global peak.</div>
+    <div class="subrow"><label><input type="checkbox" data-layer="tr" checked> <span class="dot" style="background:var(--treat)"></span> Treatment &amp; prevention</label><button type="button" class="info" data-info="infoTr" aria-expanded="false" aria-label="What is this?">?</button></div>
+    <div class="infotext" id="infoTr" hidden>Medical advances: the first blood test, AZT, protease inhibitors and combination therapy, PEPFAR, PrEP, U=U, and long-acting drugs. Each one bends the deaths curve below the lanes.</div>
+    <div class="subrow"><label><input type="checkbox" data-layer="cu" checked> <span class="dot" style="background:var(--culture)"></span> Public moments</label><button type="button" class="info" data-info="infoCu" aria-expanded="false" aria-label="What is this?">?</button></div>
+    <div class="infotext" id="infoCu" hidden>Moments that changed how the public saw the epidemic: Rock Hudson, ACT UP and the Memorial Quilt, Ryan White, Magic Johnson, Freddie Mercury.</div>
+    <div class="subrow"><label><input type="checkbox" data-layer="pr" checked> <span class="dot" style="background:var(--msprod)"></span> Microsoft products</label><button type="button" class="info" data-info="infoPr" aria-expanded="false" aria-label="What is this?">?</button></div>
+    <div class="infotext" id="infoPr" hidden>MS-DOS, the Windows releases, Office, Xbox, Azure, and the AI era. The product story runs on almost exactly the same calendar as the epidemic.</div>
+    <div class="subrow"><label><input type="checkbox" data-layer="bz" checked> <span class="dot" style="background:var(--msbiz)"></span> Microsoft business</label><button type="button" class="info" data-info="infoBz" aria-expanded="false" aria-label="What is this?">?</button></div>
+    <div class="infotext" id="infoBz" hidden>The founding, the IBM deal, the IPO, the antitrust case, and the handoffs from Gates to Ballmer to Nadella.</div>
+    <div class="subrow"><label><input type="checkbox" data-layer="cv" checked> <span class="dia" style="background:var(--conv)"></span> Convergence: Gates Foundation <span class="yrs">2000 on</span></label><button type="button" class="info" data-info="infoCv" aria-expanded="false" aria-label="What is this?">?</button></div>
+    <div class="infotext" id="infoCv" hidden>Where the two stories meet. From 2000, wealth created by Microsoft flows into the global fight against HIV through the Gates Foundation: a founding pledge to the Global Fund, the Buffett gift that doubled the endowment, and billions into prevention, treatment access, and vaccine research.</div>
+    <div class="subrow"><label><input type="checkbox" data-layer="deaths" checked> <span class="dot" style="background:var(--deaths);opacity:.45"></span> US deaths curve <span class="yrs">1981 on</span></label><button type="button" class="info" data-info="infoDe" aria-expanded="false" aria-label="What is this?">?</button></div>
+    <div class="infotext" id="infoDe" hidden>Approximate deaths per year in the United States where HIV disease was the cause, from CDC surveillance reports, rounded. The peak is 1995 at about 51,000; combination therapy cuts it nearly in half within two years. Left axis.</div>
+    <div class="subrow"><label><input type="checkbox" data-layer="rev" checked> <span class="dot" style="background:var(--rev);opacity:.6"></span> Microsoft revenue <span class="yrs">log scale</span></label><button type="button" class="info" data-info="infoRe" aria-expanded="false" aria-label="What is this?">?</button></div>
+    <div class="infotext" id="infoRe" hidden>Approximate annual revenue by fiscal year from Microsoft's public reports, on a logarithmic right axis, since it grows from millions to hundreds of billions. A straight-ish line on a log scale means steady compounding.</div>
+  </div>
+
+  <div id="about" hidden role="dialog" aria-labelledby="abouth">
+    <h2 id="abouth">About this atlas</h2>
+    <p>A parallel timeline of the AIDS epidemic and Microsoft, 1975 to today. The two stories effectively start two months apart: the CDC's first report on the epidemic ran June 5, 1981, and the IBM PC shipped with MS-DOS that August. They run on opposite trajectories through the 1990s and converge in 2000, when the Gates Foundation begins turning Microsoft wealth into one of the largest private funding streams for HIV/AIDS work in history.</p>
+    <h3>Reading it</h3>
+    <p>The top band is the epidemic, the bottom band is Microsoft, and the green diamonds between them are where the stories meet. Each dot is dated to the month where one applies. Drag the slider or press play to replay history; events ahead of the current year fade out. Hover or tap a dot for the full story, click it to jump there.</p>
+    <h3>Data</h3>
+    <p>US deaths curve: approximate deaths per year with HIV disease as cause, from CDC HIV surveillance reports, rounded. Microsoft revenue: approximate annual revenue by fiscal year from Microsoft's public annual reports, plotted on a log scale. Both series are shown side by side for orientation; nothing here implies one caused the other.</p>
+    <p style="margin-top:8px"><button class="btn" id="aboutclose">Close</button></p>
+  </div>
+
+  <div id="evpanel" hidden role="dialog" aria-labelledby="evh">
+    <h2 id="evh">All events</h2>
+    <div id="evtable"></div>
+    <p style="margin-top:8px"><button class="btn" id="evclose">Close</button></p>
+  </div>
+
+  <div id="tip" hidden></div>
+</div>
+
+<div id="dock">
+  <div class="row1">
+    <div class="controls">
+      <button class="btn" id="prev" aria-label="Previous event">◀︎</button>
+      <button class="btn primary" id="play">▶︎ Play</button>
+      <button class="btn" id="next" aria-label="Next event">▶︎</button>
+      <select class="btn" id="speed" aria-label="Playback speed">
+        <option value="2">2 yrs/sec</option>
+        <option value="4" selected>4 yrs/sec</option>
+        <option value="8">8 yrs/sec</option>
+      </select>
+    </div>
+    <div class="year" id="year" aria-live="polite">2026</div>
+    <div class="caption">
+      <div class="ev" id="ev"></div>
+      <div class="desc" id="desc"></div>
+    </div>
+  </div>
+  <div id="sliderwrap">
+    <svg id="ruler" aria-hidden="true"></svg>
+    <input type="range" id="slider" min="1975" max="2026" step="0.05" value="2026" aria-label="Year">
+  </div>
+</div>
+
+<script>
+"use strict";
+var Y0 = 1975, Y1 = 2026;
+
+/* track: a = epidemic, m = Microsoft, c = convergence. cat matches layer keys. m = display date. */
+var EVENTS = [
+  { y: 1975.29, m: "Apr 1975", t: "m", cat: "bz", name: "Microsoft founded", d: "Bill Gates and Paul Allen start Micro-Soft in Albuquerque to sell a BASIC interpreter for the Altair 8800." },
+  { y: 1980.87, m: "Nov 1980", t: "m", cat: "bz", name: "The IBM deal", d: "Microsoft signs on to supply the operating system for IBM's secret PC project, then buys 86-DOS to deliver it. The license terms let Microsoft sell the same system to every PC clone maker." },
+  { y: 1981.45, m: "Jun 1981", t: "a", cat: "ep", name: "First CDC report", d: "June 5: the CDC's MMWR describes rare pneumonia in five young men in Los Angeles. It is the first official report of what becomes the AIDS epidemic." },
+  { y: 1981.62, m: "Aug 1981", t: "m", cat: "pr", name: "IBM PC ships with MS-DOS", d: "August 12: the IBM PC launches running Microsoft's operating system, two months after the CDC report. The PC era and the epidemic begin the same summer." },
+  { y: 1982.71, m: "Sep 1982", t: "a", cat: "ep", name: "The name AIDS", d: "The CDC adopts the term acquired immunodeficiency syndrome after cases appear far beyond the first groups identified." },
+  { y: 1983.37, m: "May 1983", t: "a", cat: "ep", name: "The virus is isolated", d: "Françoise Barré-Sinoussi and Luc Montagnier at the Institut Pasteur publish the isolation of the virus later named HIV, work that earns the 2008 Nobel Prize." },
+  { y: 1983.87, m: "Nov 1983", t: "m", cat: "pr", name: "Word ships, Windows announced", d: "Microsoft ships Word and previews Windows, moving beyond operating systems into applications and graphical interfaces." },
+  { y: 1985.2, m: "Mar 1985", t: "a", cat: "tr", name: "First HIV blood test", d: "The FDA licenses the first HIV antibody test, and blood banks begin screening the supply." },
+  { y: 1985.75, m: "Oct 1985", t: "a", cat: "cu", name: "Rock Hudson dies", d: "Hudson is the first major American celebrity known to die of AIDS. Public attention, and donations, jump." },
+  { y: 1985.9, m: "Nov 1985", t: "m", cat: "pr", name: "Windows 1.0", d: "The first graphical version of Windows ships, two years after it was announced." },
+  { y: 1986.2, m: "Mar 1986", t: "m", cat: "bz", name: "Microsoft goes public", d: "March 13: the IPO prices at $21 a share. Within a year the stock makes Bill Gates, at 31, the youngest self-made billionaire to that point." },
+  { y: 1987.2, m: "Mar 1987", t: "a", cat: "tr", name: "AZT approved", d: "The FDA approves azidothymidine, the first drug against HIV, after an unusually fast review driven by activist pressure. ACT UP forms in New York the same month." },
+  { y: 1987.79, m: "Oct 1987", t: "a", cat: "cu", name: "The Memorial Quilt", d: "The AIDS Memorial Quilt is first displayed on the National Mall with 1,920 panels, each the size of a grave." },
+  { y: 1987.95, m: "Dec 1987", t: "m", cat: "pr", name: "Windows 2.0 and Excel", d: "Windows 2.0 and Excel for Windows ship, the start of the Office applications that fund everything after." },
+  { y: 1990.27, m: "Apr 1990", t: "a", cat: "cu", name: "Ryan White dies", d: "The Indiana teenager who fought to attend school dies at 18. Congress passes the Ryan White CARE Act, the largest federal program for people living with HIV, four months later." },
+  { y: 1990.37, m: "May 1990", t: "m", cat: "pr", name: "Windows 3.0", d: "The breakout release. Windows becomes the standard face of the PC and sells millions of copies in months." },
+  { y: 1991.87, m: "Nov 1991", t: "a", cat: "cu", name: "Magic Johnson and Freddie Mercury", d: "November 7: Magic Johnson announces he is HIV positive and retires. Freddie Mercury dies of AIDS-related illnessseventeen days later." },
+  { y: 1992.5, m: "1992", t: "a", cat: "ep", name: "Leading cause of death", d: "AIDS becomes the leading cause of death for American men aged 25 to 44, and by mid-decade for all Americans in that age group." },
+  { y: 1993.04, m: "Jan 1993", t: "m", cat: "bz", name: "Most valuable tech company", d: "Microsoft's market value passes IBM's, a symbolic handoff from the mainframe era to the PC era it supplied." },
+  { y: 1995.3, m: "1995", t: "a", cat: "ep", name: "Deadliest US year", d: "About 51,000 Americans die of AIDS in 1995, the epidemic's US peak. It is the leading killer of Americans aged 25 to 44." },
+  { y: 1995.62, m: "Aug 1995", t: "m", cat: "pr", name: "Windows 95", d: "August 24: a midnight-launch cultural event, with the Rolling Stones licensed for the ads. Internet Explorer arrives the same month." },
+  { y: 1995.95, m: "Dec 1995", t: "a", cat: "tr", name: "First protease inhibitor", d: "The FDA approves saquinavir in record time, the first of a new drug class and the key to combination therapy." },
+  { y: 1996.5, m: "1996", t: "a", cat: "tr", name: "Combination therapy", d: "Triple-drug therapy becomes standard and US deaths fall by nearly half within two years, the sharpest turn in the epidemic's course." },
+  { y: 1998.37, m: "May 1998", t: "m", cat: "bz", name: "United States v. Microsoft", d: "The Justice Department and 20 states sue over the bundling of Internet Explorer with Windows. A breakup order in 2000 is overturned on appeal in 2001." },
+  { y: 2000.04, m: "Jan 2000", t: "m", cat: "bz", name: "Ballmer becomes CEO", d: "Gates hands the CEO role to Steve Ballmer and becomes chief software architect, freeing time for what comes next." },
+  { y: 2000.4, m: "2000", t: "c", cat: "cv", name: "Gates Foundation launches", d: "The Bill & Melinda Gates Foundation forms from Microsoft wealth and makes global health its centerpiece. The two timelines on this page meet here." },
+  { y: 2001.83, m: "Oct–Nov 2001", t: "m", cat: "pr", name: "Windows XP and Xbox", d: "XP becomes the longest-lived Windows, and the first Xbox takes Microsoft into the living room." },
+  { y: 2002.04, m: "Jan 2002", t: "c", cat: "cv", name: "Global Fund founding backer", d: "The foundation's early $100 million pledge helps launch the Global Fund to Fight AIDS, Tuberculosis and Malaria, now a main channel for HIV treatment worldwide." },
+  { y: 2003.07, m: "Jan 2003", t: "a", cat: "tr", name: "PEPFAR", d: "Announced in the State of the Union: the US commits $15 billion to fight AIDS abroad, the largest health initiative ever aimed at one disease. It is credited with saving over 25 million lives." },
+  { y: 2004.5, m: "2004–05", t: "a", cat: "ep", name: "Global deaths peak", d: "Worldwide AIDS deaths crest around two million a year in the mid-2000s, with sub-Saharan Africa hit hardest, then decline as treatment scales up." },
+  { y: 2006.47, m: "Jun 2006", t: "c", cat: "cv", name: "The Buffett gift", d: "Warren Buffett pledges the bulk of his fortune, roughly doubling the foundation's resources and expanding its HIV prevention, treatment, and vaccine work." },
+  { y: 2008.45, m: "Jun 2008", t: "m", cat: "bz", name: "Gates steps back", d: "Gates ends day-to-day work at Microsoft to focus on the foundation full time. Microsoft wealth is now a primary engine of global HIV funding." },
+  { y: 2010.12, m: "Feb 2010", t: "m", cat: "pr", name: "Azure launches", d: "Microsoft's cloud platform goes live, the business that powers its second act." },
+  { y: 2012.54, m: "Jul 2012", t: "a", cat: "tr", name: "PrEP approved", d: "The FDA approves Truvada to prevent infection. Taken daily, it cuts the risk of getting HIV from sex by about 99 percent." },
+  { y: 2014.12, m: "Feb 2014", t: "m", cat: "bz", name: "Nadella becomes CEO", d: "Satya Nadella takes over and reorients Microsoft around cloud and, later, AI. Market value grows roughly tenfold over the next decade." },
+  { y: 2016.5, m: "2016", t: "a", cat: "tr", name: "U=U", d: "Evidence settles that a person with an undetectable viral load cannot transmit HIV sexually: undetectable equals untransmittable." },
+  { y: 2021.04, m: "Jan 2021", t: "a", cat: "tr", name: "Long-acting injectables", d: "The FDA approves the first complete long-acting injectable regimen, replacing daily pills with shots every month or two." },
+  { y: 2023.2, m: "2023", t: "m", cat: "pr", name: "The Copilot era", d: "Microsoft's multibillion-dollar OpenAI partnership puts AI assistants across Windows, Office, and Azure." },
+  { y: 2025.45, m: "Jun 2025", t: "a", cat: "tr", name: "Twice-yearly prevention", d: "The FDA approves lenacapavir for PrEP after trials showed near-complete protection from two injections a year, a step many see as the path to ending the epidemic." }
+];
+
+/* Approximate US deaths per year, HIV disease as cause (CDC surveillance, rounded) */
+var DEATHS = [[1981,130],[1982,470],[1983,1500],[1984,3500],[1985,7000],[1986,12000],[1987,16500],[1988,21000],[1989,27500],[1990,31000],[1991,36500],[1992,41000],[1993,45000],[1994,49500],[1995,51000],[1996,38000],[1997,21500],[1998,18000],[1999,16700],[2000,14500],[2001,14200],[2002,14000],[2003,13500],[2004,13000],[2005,12500],[2006,12000],[2007,11500],[2008,10200],[2009,9400],[2010,8400],[2011,8000],[2012,7700],[2013,7000],[2014,6700],[2015,6500],[2016,6200],[2017,5700],[2018,5500],[2019,5000],[2020,5200],[2021,5100],[2022,5000],[2023,4900],[2024,4800]];
+
+/* Approximate Microsoft revenue by fiscal year, $B (public reports, rounded) */
+var REV = [[1980,0.008],[1982,0.025],[1984,0.098],[1986,0.198],[1988,0.59],[1990,1.18],[1992,2.76],[1994,4.65],[1995,5.94],[1996,8.67],[1998,14.5],[2000,22.96],[2002,28.4],[2004,36.8],[2006,44.3],[2008,60.4],[2010,62.5],[2012,73.7],[2014,86.8],[2016,85.3],[2018,110.4],[2020,143.0],[2022,198.3],[2024,245.1],[2025,281.7]];
+
+var LAYERS = { ep: true, tr: true, cu: true, pr: true, bz: true, cv: true, deaths: true, rev: true };
+var CATCOLOR = { ep: "var(--aids)", tr: "var(--treat)", cu: "var(--culture)", pr: "var(--msprod)", bz: "var(--msbiz)", cv: "var(--conv)" };
+var CATNAME = { ep: "Epidemic", tr: "Treatment", cu: "Public", pr: "Product", bz: "Business", cv: "Convergence" };
+
+var year = Y1, playing = false, selected = null, lastT = 0;
+var stage = document.getElementById("stage"), tip = document.getElementById("tip");
+var slider = document.getElementById("slider"), yearEl = document.getElementById("year");
+var evEl = document.getElementById("ev"), descEl = document.getElementById("desc");
+
+function visible(e) { return LAYERS[e.cat]; }
+function sortedVisible() { return EVENTS.filter(visible).slice().sort(function (a, b) { return a.y - b.y; }); }
+
+var SVG = "http://www.w3.org/2000/svg";
+function el(n, at) { var e = document.createElementNS(SVG, n); for (var k in at) e.setAttribute(k, at[k]); return e; }
+function txt(at, s) { var t = el("text", at); t.setAttribute("font-family", "var(--f-ui)"); t.textContent = s; return t; }
+
+var W = 0, H = 0, M = { l: 50, r: 56, t: 10, b: 24 };
+var rowsA = [], rowsM = [], bandC = 0, bandA = [], bandM = [], chartTop = 0, chartBot = 0, pitch = 0, labelsOn = true;
+function xOf(y) { return M.l + (y - Y0) / (Y1 - Y0) * (W - M.l - M.r); }
+
+function layout() {
+  W = stage.clientWidth; H = stage.clientHeight;
+  labelsOn = W >= 660;
+  pitch = Math.max(22, Math.min(34, (H - 196) / 4.8));
+  var showDates = pitch >= 27 && labelsOn;
+  var top = M.t;
+  var aTop = top + 18;
+  rowsA = [aTop + 12, aTop + 12 + pitch, aTop + 12 + 2 * pitch];
+  bandA = [top + 2, aTop + 22 + 2 * pitch];
+  bandC = bandA[1] + 16;
+  var mTop = bandC + 18;
+  rowsM = [mTop + 14, mTop + 14 + pitch, mTop + 14 + 2 * pitch];
+  bandM = [mTop - 2, mTop + 24 + 2 * pitch];
+  chartTop = bandM[1] + 10;
+  chartBot = H - M.b;
+  return showDates;
+}
+
+/* Greedy label layout: pick a row whose last label ends before this dot; drop the label if none fits. */
+function placeLane(evts, rows, showDates) {
+  var ends = rows.map(function () { return -1e9; });
+  return evts.map(function (e) {
+    var x = xOf(e.y);
+    var chars = Math.max(Math.min(e.name.length, 30), showDates ? e.m.length : 0);
+    var w = chars * 5.7 + 10;
+    var left = x + 8 + w > W - M.r + 40;           /* label to the left of the dot */
+    var need0 = left ? x - w - 12 : x - 8;         /* row must be clear up to here */
+    var endAt = left ? x - 2 : x + 8 + w;
+    var r = -1, best = -1, bestEnd = 1e9;
+    for (var i = 0; i < rows.length; i++) {
+      if (ends[i] <= need0) { if (ends[i] < bestEnd) { bestEnd = ends[i]; best = i; } }
+    }
+    r = best;
+    var show = labelsOn && r >= 0;
+    if (r < 0) { /* no clear row: park the dot on the emptiest row, no label */
+      r = 0; for (var j = 1; j < rows.length; j++) if (ends[j] < ends[r]) r = j;
+      ends[r] = Math.max(ends[r], x + 8);
+    } else {
+      ends[r] = endAt;
+    }
+    return { e: e, x: x, yy: rows[r], show: show, left: left };
+  });
+}
+
+function pathFrom(pts) {
+  var d = "";
+  for (var i = 0; i < pts.length; i++) d += (i ? "L" : "M") + pts[i][0].toFixed(1) + "," + pts[i][1].toFixed(1);
+  return d;
+}
+
+function render() {
+  var showDates = layout();
+  var svg = el("svg", { viewBox: "0 0 " + W + " " + H, role: "img" });
+  var t1 = el("title", {}); t1.textContent = "Parallel timeline of the AIDS epidemic and Microsoft"; svg.appendChild(t1);
+
+  /* tinted bands make the three stories visually separate */
+  svg.appendChild(el("rect", { x: M.l - 44, y: bandA[0], width: W - M.l - M.r + 88, height: bandA[1] - bandA[0], rx: 8, fill: "var(--aids)", opacity: .055 }));
+  svg.appendChild(el("rect", { x: M.l - 44, y: bandM[0], width: W - M.l - M.r + 88, height: bandM[1] - bandM[0], rx: 8, fill: "var(--msprod)", opacity: .055 }));
+
+  /* x axis grid + year labels */
+  var step = (W < 620) ? 10 : 5;
+  for (var y = 1975; y <= 2025; y += step) {
+    var x = xOf(y);
+    svg.appendChild(el("line", { x1: x, y1: bandA[0], x2: x, y2: H - M.b, stroke: "var(--line)", "stroke-width": 1, "stroke-dasharray": "2 5", opacity: .8 }));
+    svg.appendChild(txt({ x: x, y: H - 8, "text-anchor": "middle", "font-size": 11, fill: "var(--muted)" }, y));
+  }
+
+  /* band headers */
+  svg.appendChild(txt({ x: M.l - 38, y: bandA[0] + 13, "font-size": 11, "font-weight": 600, fill: "var(--aids)", "letter-spacing": ".06em" }, "AIDS EPIDEMIC"));
+  svg.appendChild(txt({ x: M.l - 38, y: bandC + 3.5, "font-size": 10.5, "font-weight": 600, fill: "var(--conv)", "letter-spacing": ".06em" }, "WHERE THEY MEET"));
+  svg.appendChild(txt({ x: M.l - 38, y: bandM[0] + 13, "font-size": 11, "font-weight": 600, fill: "var(--msprod)", "letter-spacing": ".06em" }, "MICROSOFT"));
+  svg.appendChild(el("line", { x1: M.l + 80, y1: bandC, x2: W - M.r, y2: bandC, stroke: "var(--conv)", "stroke-width": 1, opacity: .35, "stroke-dasharray": "3 4" }));
+
+  /* charts */
+  var dMax = 55000;
+  function yDeath(v) { return chartBot - v / dMax * (chartBot - chartTop); }
+  var lmin = Math.log10(0.008), lmax = Math.log10(320);
+  function yRev(v) { return chartBot - (Math.log10(v) - lmin) / (lmax - lmin) * (chartBot - chartTop); }
+  var chartRoom = chartBot - chartTop > 56;
+
+  if (LAYERS.deaths && chartRoom) {
+    var pts = DEATHS.filter(function (d) { return d[0] <= year; }).map(function (d) { return [xOf(d[0]), yDeath(d[1])]; });
+    if (year > 1981 && pts.length) {
+      var area = pathFrom(pts) + "L" + pts[pts.length - 1][0].toFixed(1) + "," + chartBot + "L" + pts[0][0].toFixed(1) + "," + chartBot + "Z";
+      svg.appendChild(el("path", { d: area, fill: "var(--deaths)", opacity: .15 }));
+      svg.appendChild(el("path", { d: pathFrom(pts), fill: "none", stroke: "var(--deaths)", "stroke-width": 1.6, opacity: .85 }));
+    }
+    svg.appendChild(txt({ x: M.l - 6, y: yDeath(50000) + 3, "text-anchor": "end", "font-size": 10, fill: "var(--muted)" }, "50k"));
+    svg.appendChild(el("line", { x1: M.l, y1: yDeath(50000), x2: W - M.r, y2: yDeath(50000), stroke: "var(--line)", "stroke-width": .6, opacity: .7 }));
+    svg.appendChild(txt({ x: M.l - 6, y: chartTop + 9, "text-anchor": "end", "font-size": 9.5, fill: "var(--deaths)" }, "US deaths/yr"));
+    if (year >= 1995.5 && W >= 660) {
+      var px = xOf(1995), py = yDeath(51000);
+      svg.appendChild(el("circle", { cx: px, cy: py, r: 3, fill: "var(--deaths)" }));
+      svg.appendChild(txt({ x: px + 7, y: py + 2, "font-size": 10.5, "font-weight": 600, fill: "var(--deaths)" }, "1995 peak: ≈51,000 — then therapy arrives"));
+    }
+  }
+  if (LAYERS.rev && chartRoom) {
+    var rp = REV.filter(function (d) { return d[0] <= year; }).map(function (d) { return [xOf(d[0]), yRev(d[1])]; });
+    if (rp.length > 1) svg.appendChild(el("path", { d: pathFrom(rp), fill: "none", stroke: "var(--rev)", "stroke-width": 1.8, opacity: .9 }));
+    svg.appendChild(txt({ x: W - M.r + 6, y: yRev(1) + 3, "font-size": 10, fill: "var(--muted)" }, "$1B"));
+    svg.appendChild(txt({ x: W - M.r + 6, y: chartTop + 9, "font-size": 9.5, fill: "var(--rev)" }, "MSFT rev"));
+    if (year >= 2025 && rp.length && W >= 660) {
+      var ep = rp[rp.length - 1];
+      svg.appendChild(txt({ x: ep[0] - 6, y: ep[1] - 6, "text-anchor": "end", "font-size": 10.5, "font-weight": 600, fill: "var(--rev)" }, "≈$282B revenue"));
+    }
+  }
+
+  /* year cursor */
+  var cx = xOf(year);
+  svg.appendChild(el("line", { x1: cx, y1: bandA[0], x2: cx, y2: H - M.b, stroke: "var(--ink)", "stroke-width": 1.2, opacity: .5 }));
+
+  /* events with labels */
+  var vis = sortedVisible();
+  var placedA = placeLane(vis.filter(function (e) { return e.t === "a"; }), rowsA, showDates);
+  var placedM = placeLane(vis.filter(function (e) { return e.t === "m"; }), rowsM, showDates);
+
+  function drawEv(p) {
+    var e = p.e, x = p.x, yy = p.yy, past = e.y <= year + 0.001, sel = selected === e;
+    var g = el("g", { cursor: "pointer", opacity: past ? 1 : .18 });
+    if (e.t === "c") {
+      g.appendChild(el("rect", { x: x - 5.5, y: yy - 5.5, width: 11, height: 11, rx: 2, transform: "rotate(45 " + x + " " + yy + ")", fill: CATCOLOR[e.cat], stroke: "var(--panel)", "stroke-width": 1.2 }));
+    } else {
+      g.appendChild(el("circle", { cx: x, cy: yy, r: sel ? 6.5 : 5, fill: CATCOLOR[e.cat], stroke: "var(--panel)", "stroke-width": 1.4 }));
+    }
+    if (sel) g.appendChild(el("circle", { cx: x, cy: yy, r: 10, fill: "none", stroke: CATCOLOR[e.cat], "stroke-width": 1.4, opacity: .85 }));
+    if (p.show) {
+      var anchor = p.left ? "end" : "start", lx = p.left ? x - 9 : x + 9;
+      var name = e.name.length > 30 ? e.name.slice(0, 29) + "…" : e.name;
+      var nameAt = { x: lx, y: showDates ? yy - 1.5 : yy + 3.5, "text-anchor": anchor, "font-size": 11, "font-weight": 600, fill: "var(--ink)" };
+      g.appendChild(txt(nameAt, name));
+      if (showDates) g.appendChild(txt({ x: lx, y: yy + 9.5, "text-anchor": anchor, "font-size": 9.5, fill: CATCOLOR[e.cat], "font-weight": 500 }, e.m));
+    }
+    g.addEventListener("pointermove", function (ev) { showTip(ev, e); });
+    g.addEventListener("pointerleave", hideTip);
+    g.addEventListener("click", function () { selectEvent(e, true); });
+    svg.appendChild(g);
+  }
+  placedA.forEach(drawEv);
+  placedM.forEach(drawEv);
+  /* convergence diamonds with labels below the band line */
+  vis.filter(function (e) { return e.t === "c"; }).forEach(function (e, i) {
+    var p = { e: e, x: xOf(e.y), yy: bandC, show: false };
+    drawEv(p);
+    if (labelsOn) {
+      var g = el("g", { opacity: e.y <= year + 0.001 ? 1 : .18, cursor: "pointer" });
+      var short = ["Gates Foundation", "Global Fund pledge", "Buffett gift"][i] || e.name;
+      g.appendChild(txt({ x: p.x, y: bandC - 11, "text-anchor": "middle", "font-size": 10.5, "font-weight": 600, fill: "var(--conv)" }, short + " · " + e.m));
+      g.addEventListener("click", function () { selectEvent(e, true); });
+      g.addEventListener("pointermove", function (ev) { showTip(ev, e); });
+      g.addEventListener("pointerleave", hideTip);
+      svg.appendChild(g);
+    }
+  });
+
+  stage.replaceChildren(svg);
+}
+
+function showTip(ev, e) {
+  tip.hidden = false;
+  tip.innerHTML = "<div class='t'>" + e.name + "</div><div class='s'>" + e.m + " · " + CATNAME[e.cat] + "</div><div>" + e.d + "</div>";
+  var r = stage.getBoundingClientRect();
+  var x = ev.clientX - r.left + 12, yv = ev.clientY - r.top + 12;
+  if (x + 290 > r.width) x = r.width - 290;
+  if (yv + tip.offsetHeight + 10 > r.height) yv = ev.clientY - r.top - tip.offsetHeight - 10;
+  tip.style.left = Math.max(4, x) + "px"; tip.style.top = Math.max(4, yv) + "px";
+}
+function hideTip() { tip.hidden = true; }
+
+function caption() {
+  var vis = sortedVisible().filter(function (e) { return e.y <= year + 0.001; });
+  var e = selected && visible(selected) && selected.y <= year + 0.001 ? selected : vis[vis.length - 1];
+  if (!e) { evEl.textContent = "Drag the slider to begin"; descEl.textContent = "Microsoft is founded in April 1975; the epidemic's first report comes in June 1981."; return; }
+  evEl.innerHTML = e.name + " <span class='when'>" + e.m + "</span><span class='tag' style='background:color-mix(in srgb, " + CATCOLOR[e.cat] + " 18%, transparent); color:" + CATCOLOR[e.cat] + "'>" + CATNAME[e.cat] + "</span>";
+  descEl.textContent = e.d;
+}
+
+function setYear(v, keepSel) {
+  year = Math.max(Y0, Math.min(Y1, v));
+  slider.value = year;
+  yearEl.textContent = Math.floor(year);
+  if (!keepSel) selected = null;
+  render(); caption();
+}
+
+function selectEvent(e, jump) {
+  selected = e;
+  if (jump) { year = Math.min(Y1, e.y + 0.01); slider.value = year; yearEl.textContent = Math.floor(year); }
+  stopPlay(); render(); caption();
+}
+
+slider.addEventListener("input", function () { stopPlay(); setYear(parseFloat(slider.value)); });
+
+document.getElementById("prev").addEventListener("click", function () {
+  stopPlay();
+  var vis = sortedVisible(), cur = year - 0.02, e = null;
+  for (var i = vis.length - 1; i >= 0; i--) if (vis[i].y < cur) { e = vis[i]; break; }
+  if (e) selectEvent(e, true);
+});
+document.getElementById("next").addEventListener("click", function () {
+  stopPlay();
+  var vis = sortedVisible(), e = null;
+  for (var i = 0; i < vis.length; i++) if (vis[i].y > year + 0.02) { e = vis[i]; break; }
+  if (e) selectEvent(e, true);
+});
+
+var playBtn = document.getElementById("play");
+function stopPlay() { playing = false; playBtn.textContent = "▶︎ Play"; }
+playBtn.addEventListener("click", function () {
+  if (playing) { stopPlay(); return; }
+  if (year >= Y1 - 0.1) year = Y0;
+  playing = true; playBtn.textContent = "❚❚ Pause"; lastT = 0;
+  requestAnimationFrame(tick);
+});
+function tick(t) {
+  if (!playing) return;
+  if (lastT) {
+    var sp = parseFloat(document.getElementById("speed").value);
+    setYear(year + (t - lastT) / 1000 * sp, true);
+    if (year >= Y1) { stopPlay(); }
+  }
+  lastT = t;
+  if (playing) requestAnimationFrame(tick);
+}
+
+/* layers panel */
+document.getElementById("layersbtn").addEventListener("click", function () {
+  var p = document.getElementById("layers"); p.hidden = !p.hidden;
+  this.setAttribute("aria-expanded", String(!p.hidden));
+});
+document.querySelectorAll("#layers input[data-layer]").forEach(function (cb) {
+  cb.addEventListener("change", function () { LAYERS[cb.dataset.layer] = cb.checked; render(); caption(); });
+});
+document.querySelectorAll(".info").forEach(function (b) {
+  b.addEventListener("click", function () {
+    var t = document.getElementById(b.dataset.info), open = t.hidden;
+    t.hidden = !open; b.setAttribute("aria-expanded", String(open));
+  });
+});
+
+/* about / events panels */
+function togglePanel(id) {
+  var p = document.getElementById(id), open = p.hidden;
+  document.getElementById("about").hidden = true; document.getElementById("evpanel").hidden = true;
+  p.hidden = !open;
+}
+document.getElementById("aboutbtn").addEventListener("click", function () { togglePanel("about"); });
+document.getElementById("aboutclose").addEventListener("click", function () { document.getElementById("about").hidden = true; });
+document.getElementById("evbtn").addEventListener("click", function () { buildTable(); togglePanel("evpanel"); });
+document.getElementById("evclose").addEventListener("click", function () { document.getElementById("evpanel").hidden = true; });
+
+function buildTable() {
+  var h = "<table>";
+  EVENTS.slice().sort(function (a, b) { return a.y - b.y; }).forEach(function (e) {
+    h += "<tr data-i='" + EVENTS.indexOf(e) + "'><td class='y'>" + e.m + "</td><td><span class='tag' style='background:color-mix(in srgb, " + CATCOLOR[e.cat] + " 18%, transparent); color:" + CATCOLOR[e.cat] + "'>" + CATNAME[e.cat] + "</span></td><td><b>" + e.name + "</b></td></tr>";
+  });
+  document.getElementById("evtable").innerHTML = h + "</table>";
+  document.querySelectorAll("#evtable tr").forEach(function (tr) {
+    tr.addEventListener("click", function () {
+      document.getElementById("evpanel").hidden = true;
+      selectEvent(EVENTS[+tr.dataset.i], true);
+    });
+  });
+}
+
+/* theme toggle: auto -> light -> dark */
+var themeOrder = ["", "light", "dark"], themeIdx = 0;
+try { var tv = localStorage.getItem("pxtheme"); if (tv) { themeIdx = Math.max(0, themeOrder.indexOf(tv)); } } catch (e) {}
+function applyTheme() {
+  var v = themeOrder[themeIdx];
+  if (v) document.documentElement.setAttribute("data-theme", v);
+  else document.documentElement.removeAttribute("data-theme");
+  try { localStorage.setItem("pxtheme", v); } catch (e) {}
+  render();
+}
+document.getElementById("themebtn").addEventListener("click", function () { themeIdx = (themeIdx + 1) % 3; applyTheme(); });
+
+/* ruler: year ticks plus one colored tick per event, so the slider shows where history is dense */
+function drawRuler() {
+  var r = document.getElementById("ruler"), w = r.clientWidth || r.getBoundingClientRect().width, h = 18;
+  r.setAttribute("viewBox", "0 0 " + w + " " + h);
+  r.replaceChildren();
+  for (var y = 1975; y <= 2026; y++) {
+    var x = (y - Y0) / (Y1 - Y0) * w;
+    var big = y % 5 === 0;
+    r.appendChild(el("line", { x1: x, y1: h, x2: x, y2: big ? 10 : 14, stroke: "var(--muted)", "stroke-width": big ? 1.2 : .6, opacity: big ? .9 : .5 }));
+  }
+  EVENTS.forEach(function (e) {
+    var x = (e.y - Y0) / (Y1 - Y0) * w;
+    if (e.t === "c") {
+      r.appendChild(el("rect", { x: x - 3, y: 1, width: 6, height: 6, rx: 1.2, transform: "rotate(45 " + x + " 4)", fill: "var(--conv)" }));
+    } else {
+      r.appendChild(el("line", { x1: x, y1: e.t === "a" ? 0 : 5, x2: x, y2: e.t === "a" ? 4 : 9, stroke: CATCOLOR[e.cat], "stroke-width": 2 }));
+    }
+  });
+}
+
+var raf = null;
+window.addEventListener("resize", function () {
+  if (raf) cancelAnimationFrame(raf);
+  raf = requestAnimationFrame(function () { drawRuler(); render(); });
+});
+
+/* open on the full picture, captioned at the convergence point */
+drawRuler();
+applyTheme();
+selected = EVENTS.find(function (e) { return e.cat === "cv"; });
+setYear(Y1, true);
+</script>
+
+</body>
+</html>
