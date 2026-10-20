@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="referrer" content="no-referrer">
+<style>
+  :root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; font-size: 14px; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+<title>Migration Flows</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,650&display=swap">
+<style>
+  /* Layout: flow map. Header with totals and controls, map with arrows (left), ranked list of flows (right). Stacks on phones. */
+  :root {
+    --bg: #eceff1; --panel: #fbfbfb; --ink: #17202a; --muted: #5a6470; --line: #d4d9df;
+    --sea: #dfe5ea; --land: #cdd3d9; --land-sel: #aeb7c1; --border: #f3f5f7; --dest: #1d2733;
+    --low: #d99000; --lmid: #0f9d8a; --umid: #8466d9; --high: #6b7480; --link: #1f5fbf;
+    --f-display: "Newsreader", Georgia, serif; --f-ui: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #101418; --panel: #171c21; --ink: #e6e9ec; --muted: #99a2ac; --line: #2a3138;
+      --sea: #1b2128; --land: #2e363f; --land-sel: #46515d; --border: #1b2128; --dest: #e6e9ec;
+      --low: #f0a92a; --lmid: #2cc3ad; --umid: #a48cf0; --high: #8b949e; --link: #7aa7ee; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #101418; --panel: #171c21; --ink: #e6e9ec; --muted: #99a2ac; --line: #2a3138;
+    --sea: #1b2128; --land: #2e363f; --land-sel: #46515d; --border: #1b2128; --dest: #e6e9ec;
+    --low: #f0a92a; --lmid: #2cc3ad; --umid: #a48cf0; --high: #8b949e; --link: #7aa7ee; color-scheme: dark;
+  }
+  [hidden] { display: none !important; }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--f-ui); font-size: 14px; display: flex; flex-direction: column; }
+  :focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+  header {
+    background: var(--panel); border-bottom: 1px solid var(--line);
+    padding-block: 12px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+    display: grid; gap: 8px;
+  }
+  .top { display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; }
+  h1 { margin: 0; font-family: var(--f-display); font-size: 22px; font-weight: 650; }
+  .sub { color: var(--muted); font-size: 13px; max-width: 100ch; line-height: 1.45; }
+  .stats { display: flex; flex-wrap: wrap; gap: 6px; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+  .stats span { border: 1px solid var(--line); border-radius: 99px; padding: 3px 10px; background: var(--bg); }
+  .stats b { font-weight: 650; }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; font-size: 12.5px; }
+  .yearbox { display: flex; align-items: center; gap: 10px; flex: 1 1 320px; min-width: 0; }
+  .yearbox output { font-family: var(--f-display); font-size: 24px; font-weight: 650; font-variant-numeric: tabular-nums; min-width: 2.6em; }
+  .yearbox input { flex: 1 1 auto; min-width: 0; accent-color: var(--ink); }
+  .chk { display: inline-flex; align-items: center; gap: 5px; cursor: pointer; white-space: nowrap; }
+  .sw { width: 12px; height: 12px; border-radius: 2px; display: inline-block; }
+  select, .controls button {
+    height: 30px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); padding: 0 8px; font: inherit; font-size: 12.5px; cursor: pointer;
+  }
+  .controls button.primary { background: var(--ink); color: var(--panel); border-color: var(--ink); font-weight: 600; min-width: 70px; }
+
+  main { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(300px, 1fr); }
+  #map { position: relative; background: var(--sea); min-height: 0; }
+  #map svg { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+  .land { fill: var(--land); stroke: var(--border); stroke-width: .5; vector-effect: non-scaling-stroke; cursor: pointer; }
+  .land:hover { fill: var(--land-sel); }
+  .land.sel { fill: var(--land-sel); stroke: var(--ink); stroke-width: 1.2; }
+  .flow { fill: none; stroke-linecap: round; opacity: .72; vector-effect: non-scaling-stroke; cursor: pointer; }
+  .flow:hover { opacity: 1; }
+  .dest circle { fill: none; stroke: var(--dest); stroke-width: 1.3; vector-effect: non-scaling-stroke; }
+  .dest text, .flowlbl { font-family: var(--f-ui); font-weight: 600; fill: var(--ink); paint-order: stroke; stroke: var(--sea); stroke-width: 3px; stroke-linejoin: round; vector-effect: non-scaling-stroke; pointer-events: none; font-variant-numeric: tabular-nums; }
+  #tip { position: absolute; pointer-events: none; z-index: 5; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 7px; padding: 7px 10px; font-size: 12.5px; line-height: 1.4; max-width: 260px; box-shadow: 0 4px 16px rgba(0,0,0,.2); }
+  #tip b { font-variant-numeric: tabular-nums; }
+  .zoombtns { position: absolute; right: 10px; top: 10px; display: grid; gap: 6px; }
+  .zoombtns button { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); font-size: 16px; cursor: pointer; }
+  .maplegend { position: absolute; left: 10px; bottom: 10px; background: color-mix(in srgb, var(--panel) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; padding: 6px 9px; font-size: 11.5px; color: var(--muted); display: grid; gap: 3px; max-width: calc(100% - 70px); }
+
+  #side { overflow: auto; background: var(--panel); border-left: 1px solid var(--line); padding: 12px max(16px, env(safe-area-inset-right, 0px)) 16px 16px; display: grid; gap: 8px; align-content: start; min-height: 0; }
+  #side h2 { margin: 0; font-family: var(--f-display); font-size: 17px; font-weight: 650; }
+  .hint { font-size: 12px; color: var(--muted); }
+  table { width: 100%; border-collapse: collapse; font-size: 12.8px; font-variant-numeric: tabular-nums; }
+  th { text-align: left; font-weight: 600; color: var(--muted); font-size: 11.5px; padding: 4px 6px; border-bottom: 1px solid var(--line); }
+  td { padding: 5px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td.n { text-align: right; white-space: nowrap; }
+  tr { cursor: pointer; }
+  tr:hover td { background: var(--bg); }
+  .arrow { color: var(--muted); padding: 0 3px; }
+  .note { font-size: 12px; color: var(--muted); line-height: 1.45; border-top: 1px solid var(--line); padding-top: 10px; }
+  .note a { color: var(--link); }
+
+  @media (max-width: 800px) {
+    body { height: auto; }
+    main { grid-template-columns: 1fr; }
+    #map { height: 52vh; }
+    #side { border-left: 0; border-top: 1px solid var(--line); }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <h1>Migration Flows</h1>
+    <a href="../" style="font-size:13px;color:var(--link)">← Back to the atlas</a>
+    <span class="sub">People born in low- and middle-income countries who now live in another country, by country of birth and where they live, 1990 to 2024. Arrows point from the country people left to where they live; thicker arrows mean more people.</span>
+    <span class="sub"><b>Growth:</b> people from low- and middle-income countries living in high-income countries nearly tripled from 48.5 million in 1990 to 143.3 million in 2024, about 3.2% more each year, compounding (doubling roughly every 22 years). Worldwide, migrants went from 2.9% to 3.7% of all people.</span>
+  </div>
+  <div class="stats" id="stats"></div>
+  <div class="controls">
+    <select id="mode" aria-label="What to show">
+      <option value="people">All migrants (UN, 1990 to 2024)</option>
+      <option value="work">Work migration (money sent home, 2021)</option>
+    </select>
+    <div class="yearbox">
+      <button type="button" class="primary" id="play">▶ Play</button>
+      <output id="yearout">2024</output>
+      <input type="range" id="year" min="1990" max="2024" step="1" value="2024" aria-label="Year">
+    </div>
+    <span>Leaving from:</span>
+    <label class="chk"><input type="checkbox" id="gL" checked><span class="sw" style="background:var(--low)"></span>Low income</label>
+    <label class="chk"><input type="checkbox" id="gLM" checked><span class="sw" style="background:var(--lmid)"></span>Lower-middle</label>
+    <label class="chk"><input type="checkbox" id="gUM" checked><span class="sw" style="background:var(--umid)"></span>Upper-middle</label>
+    <select id="dest" aria-label="Destination">
+      <option value="all">To any country</option>
+      <option value="H" selected>To high-income countries</option>
+      <option value="west">To Europe, U.S., Canada, Australia, NZ</option>
+    </select>
+    <select id="topn" aria-label="Arrows shown">
+      <option value="40">Top 40 arrows</option>
+      <option value="100" selected>Top 100 arrows</option>
+      <option value="250">Top 250 arrows</option>
+    </select>
+  </div>
+</header>
+
+<main>
+  <div id="map">
+    <div class="zoombtns"><button id="zi" aria-label="Zoom in">+</button><button id="zo" aria-label="Zoom out">−</button><button id="zr" aria-label="Whole world" style="font-size:12px">⤢</button></div>
+    <div class="maplegend">
+      <div id="legtext">Arrow color = income group of the country people left. Circle = everyone from low- and middle-income countries living in that country.</div>
+      <div>Click a country to see only its arrows.</div>
+    </div>
+  </div>
+  <div id="side">
+    <h2 id="sidetitle">Largest flows</h2>
+    <div class="hint" id="sidehint"></div>
+    <table><thead><tr><th>From → To</th><th style="text-align:right" id="colA">People</th><th style="text-align:right" id="colB">Since 1990</th></tr></thead><tbody id="rows"></tbody></table>
+    <div class="note">Source: <a href="https://www.un.org/development/desa/pd/content/international-migrant-stock" target="_blank" rel="noopener">UN DESA International Migrant Stock 2024</a>, via <a href="https://ourworldindata.org/migration" target="_blank" rel="noopener">Our World in Data</a>. Income groups: World Bank (current classification). Work migration view: <a href="https://www.knomad.org/data/remittances" target="_blank" rel="noopener">World Bank KNOMAD bilateral remittance estimates, 2021</a> (money migrant workers send home; arrows still point from home country to where they work), and the <a href="https://www.ilo.org/resource/news/international-migrants-are-vital-force-global-labour-market" target="_blank" rel="noopener">ILO's 2022 count of migrant workers</a>. No source counts workers by origin and destination worldwide, so remittances are the closest measure. People view: figures count people living outside their country of birth in each year, including refugees, not the number who moved that year. The UN publishes every five years (1990 to 2020, then 2024); years in between are estimated on a straight line.</div>
+  </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script>
+(function () {
+  var COLORS = { L: "var(--low)", LM: "var(--lmid)", UM: "var(--umid)", H: "var(--high)" };
+  var WEST = {}; "USA CAN AUS NZL GBR IRL FRA DEU ESP PRT ITA NLD BEL LUX AUT CHE SWE NOR DNK FIN ISL GRC CYP MLT POL CZE SVK SVN HRV HUN EST LVA LTU ROU BGR".split(" ").forEach(function (a) { WEST[a] = 1; });
+  var NAMEFIX = { "United States of America": "United States", "Republic of Serbia": "Serbia", "Democratic Republic of the Congo": "DR Congo", "Republic of the Congo": "Congo", "United Republic of Tanzania": "Tanzania", "Swaziland": "Eswatini", "Macedonia": "North Macedonia", "Czech Republic": "Czechia", "Gaza Strip": "Palestine", "The Bahamas": "Bahamas", "Hong Kong S.A.R.": "Hong Kong", "Macau S.A.R": "Macao" };
+  var D, cent = {}, names = {}, year = 2024, sel = null;
+  var mapEl = document.getElementById("map");
+  var svg = d3.select(mapEl).insert("svg", ".zoombtns");
+  var root = svg.append("g");
+  var projection = d3.geoNaturalEarth1();
+  var path = d3.geoPath(projection);
+  var feats, landSel, flowG, labelG, destG, zoom, k = 1;
+  var tip = null;
+
+  Promise.all([
+    fetch("../data/provinces.json").then(function (r) { return r.json(); }),
+    fetch("../data/migration.json").then(function (r) { return r.json(); })
+  ]).then(function (res) {
+    var topo = res[0]; D = res[1];
+    feats = topojson.feature(topo, topo.objects.countries).features.filter(function (f) { return f.properties.adm0_a3 !== "ATA"; });
+    fitView();
+    feats.forEach(function (f) {
+      var a3 = f.properties.adm0_a3, best = f, g = f.geometry, ba = -1;
+      if (g && g.type === "MultiPolygon") g.coordinates.forEach(function (poly) {
+        var pf = { type: "Feature", geometry: { type: "Polygon", coordinates: poly } }, ar = d3.geoArea(pf);
+        if (ar > ba) { ba = ar; best = pf; }
+      });
+      f.best = best;
+      cent[a3] = path.centroid(best);
+      names[a3] = NAMEFIX[f.properties.admin] || f.properties.admin;
+    });
+    landSel = root.append("g").selectAll("path").data(feats).join("path").attr("class", "land").attr("d", path)
+      .on("click", function (ev, f) { var a = f.properties.adm0_a3; selectCountry(sel === a ? null : a); })
+      .on("pointermove", function (ev, f) { countryTip(ev, f.properties.adm0_a3); })
+      .on("pointerleave", hideTip);
+    root.append("defs").html(["L", "LM", "UM"].map(function (g) {
+      return "<marker id='ah-" + g + "' viewBox='0 0 10 10' refX='7' refY='5' markerUnits='userSpaceOnUse' markerWidth='7' markerHeight='7' orient='auto-start-reverse'><path d='M0,0L10,5L0,10z' fill='" + COLORS[g] + "'></path></marker>";
+    }).join(""));
+    flowG = root.append("g");
+    destG = root.append("g").attr("class", "dest");
+    labelG = root.append("g");
+    zoom = d3.zoom().scaleExtent([1, 16]).on("zoom", function (ev) { root.attr("transform", ev.transform); k = ev.transform.k; restyle(); });
+    svg.call(zoom).on("dblclick.zoom", null);
+    d3.select("#zi").on("click", function () { svg.transition().duration(250).call(zoom.scaleBy, 1.8); });
+    d3.select("#zo").on("click", function () { svg.transition().duration(250).call(zoom.scaleBy, 1 / 1.8); });
+    d3.select("#zr").on("click", function () { svg.transition().duration(400).call(zoom.transform, d3.zoomIdentity); });
+    update();
+    window.addEventListener("resize", function () { fitView(); feats.forEach(function (f) { cent[f.properties.adm0_a3] = path.centroid(f.best); }); landSel.attr("d", path); update(); });
+  });
+  function fitView() {
+    var w = mapEl.clientWidth || 960, h = mapEl.clientHeight || 500;
+    svg.attr("viewBox", "0 0 " + w + " " + h);
+    projection.fitExtent([[6, 6], [w - 6, h - 6]], { type: "MultiPoint", coordinates: [[-180, 0], [180, 0], [0, 78], [0, -56], [-170, 70], [175, 70], [-75, -56], [150, -45]] });
+  }
+
+  function valAt(arr, y) {
+    var ys = D.years;
+    if (y <= ys[0]) return arr[0];
+    for (var i = 0; i < ys.length - 1; i++) if (y <= ys[i + 1]) return arr[i] + (arr[i + 1] - arr[i]) * (y - ys[i]) / (ys[i + 1] - ys[i]);
+    return arr[arr.length - 1];
+  }
+  function fmt(n) { return n >= 1e6 ? (n / 1e6).toFixed(n >= 1e7 ? 1 : 2).replace(/\.?0+$/, "") + "M" : n >= 1e3 ? Math.round(n / 1e3) + "k" : String(Math.round(n)); }
+  function full(n) { return Math.round(n).toLocaleString(); }
+  function groupsOn() { return { L: document.getElementById("gL").checked, LM: document.getElementById("gLM").checked, UM: document.getElementById("gUM").checked }; }
+  function destOk(d) { var m = document.getElementById("dest").value; return m === "all" || (m === "H" && D.income[d] === "H") || (m === "west" && WEST[d]); }
+
+  function workMode() { return document.getElementById("mode").value === "work"; }
+  function current() {
+    var G = groupsOn();
+    if (workMode()) {
+      return D.work.filter(function (f) {
+        var gi = D.income[f[0]];
+        if (!G[gi] || !destOk(f[1]) || !cent[f[0]] || !cent[f[1]]) return false;
+        return !sel || f[0] === sel || f[1] === sel;
+      }).map(function (f) { return { o: f[0], d: f[1], v: f[2] * 1e6, v0: null, g: D.income[f[0]], money: true }; })
+        .sort(function (a, b) { return b.v - a.v; });
+    }
+    return D.flows.filter(function (f) {
+      var gi = D.income[f[0]];
+      if (!G[gi] || !destOk(f[1]) || !cent[f[0]] || !cent[f[1]]) return false;
+      if (sel && f[0] !== sel && f[1] !== sel) return false;
+      return true;
+    }).map(function (f) { return { o: f[0], d: f[1], v: valAt(f[2], year), v0: f[2][0], g: D.income[f[0]] }; })
+      .filter(function (f) { return f.v >= 1000; })
+      .sort(function (a, b) { return b.v - a.v; });
+  }
+
+  function arc(a, b) {
+    var dx = b[0] - a[0], dy = b[1] - a[1], dr = Math.sqrt(dx * dx + dy * dy) * 1.6;
+    return "M" + a[0] + "," + a[1] + "A" + dr + "," + dr + " 0 0,1 " + b[0] + "," + b[1];
+  }
+
+  function update() {
+    document.getElementById("yearout").textContent = year;
+    var all = current();
+    var n = +document.getElementById("topn").value;
+    var shown = all.slice(0, n);
+    var maxV = d3.max(all, function (f) { return f.v; }) || 1;
+    var WM = workMode();
+    var w = d3.scaleSqrt().domain([0, WM ? 55e9 : 12e6]).range([0, 16]);
+    var money = function (n) { return "$" + (n >= 1e9 ? (n / 1e9).toFixed(1) + "B" : Math.round(n / 1e6) + "M"); };
+    var fl = flowG.selectAll("path").data(shown, function (f) { return f.o + ">" + f.d; });
+    fl.exit().remove();
+    fl.enter().append("path").attr("class", "flow")
+      .on("pointermove", function (ev, f) { flowTip(ev, f); })
+      .on("pointerleave", hideTip)
+      .on("click", function (ev, f) { selectCountry(f.d === sel ? f.o : f.d); })
+      .merge(fl)
+      .attr("d", function (f) { return arc(cent[f.o], cent[f.d]); })
+      .attr("stroke", function (f) { return COLORS[f.g]; })
+      .attr("marker-end", function (f) { return "url(#ah-" + f.g + ")"; })
+      .attr("stroke-width", function (f) { return Math.max(0.6, w(f.v)); })
+      .sort(function (a, b) { return a.v - b.v; });
+
+    // Destination circles: everyone from the selected origin groups living there
+    var G = groupsOn(), inby = {};
+    if (WM) all.forEach(function (f) { inby[f.d] = (inby[f.d] || 0) + f.v; });
+    else D.flows.forEach(function (f) {
+      var gi = D.income[f[0]]; if (!G[gi] || !destOk(f[1])) return;
+      inby[f[1]] = (inby[f[1]] || 0) + valAt(f[2], year);
+    });
+    var dests = Object.keys(inby).filter(function (a) { return cent[a] && inby[a] >= (WM ? 1e9 : 200000); }).map(function (a) { return { a: a, v: inby[a] }; })
+      .sort(function (a, b) { return b.v - a.v; });
+    var r = d3.scaleSqrt().domain([0, WM ? 1.5e11 : 4e7]).range([0, 26]);
+    var dc = destG.selectAll("g").data(dests, function (d) { return d.a; });
+    dc.exit().remove();
+    var de = dc.enter().append("g");
+    de.append("circle"); de.append("text");
+    destG.selectAll("g").attr("transform", function (d) { return "translate(" + cent[d.a][0] + "," + cent[d.a][1] + ")"; })
+      .style("display", function (d) { return !sel || d.a === sel || shown.some(function (f) { return f.d === d.a; }) ? null : "none"; });
+    destG.selectAll("g").select("circle").attr("r", function (d) { return r(d.v); });
+    destG.selectAll("g").select("text").attr("text-anchor", "middle").text(function (d) { return names[d.a] + " " + (WM ? money(d.v) : fmt(d.v)); })
+      .style("display", function (d, i) { return i < 12 || sel === d.a ? null : "none"; });
+
+    // Number labels on the biggest arrows
+    var lb = labelG.selectAll("text").data(shown.slice(0, sel ? 15 : 10), function (f) { return f.o + ">" + f.d; });
+    lb.exit().remove();
+    lb.enter().append("text").attr("class", "flowlbl").attr("text-anchor", "middle").merge(lb)
+      .attr("transform", function (f) {
+        var a = cent[f.o], b = cent[f.d], mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
+        var dx = b[0] - a[0], dy = b[1] - a[1], L = Math.sqrt(dx * dx + dy * dy) || 1, h = L * 0.17;
+        return "translate(" + (mx + dy / L * h) + "," + (my - dx / L * h) + ")";
+      })
+      .text(function (f) { return WM ? money(f.v) : fmt(f.v); });
+    restyle();
+
+    // Totals
+    var total = all.reduce(function (s, f) { return s + f.v; }, 0);
+    var total0 = all.reduce(function (s, f) { return s + f.v0; }, 0);
+    var dmode = document.getElementById("dest").value;
+    var dlabel = dmode === "H" ? "high-income countries" : dmode === "west" ? "Europe, the U.S., Canada, Australia and NZ" : "any other country";
+    document.getElementById("yearout").textContent = WM ? 2021 : year;
+    document.getElementById("year").disabled = WM; playBtn.disabled = WM;
+    document.getElementById("colA").textContent = WM ? "Sent home" : "People";
+    document.getElementById("legtext").textContent = WM
+      ? "Work migration: arrows run from workers' home country to where they work; thickness = money they sent home in 2021. Circle = total sent home by workers in that country."
+      : "Arrow color = income group of the country people left. Circle = everyone from low- and middle-income countries living in that country.";
+    document.getElementById("colB").textContent = WM ? "" : "Since 1990";
+    if (WM) document.getElementById("stats").innerHTML =
+      "<span>Workers from low- and middle-income countries working in " + dlabel + (sel ? " (" + names[sel] + " only)" : "") + " sent home <b>" + money(total) + "</b> in 2021</span>" +
+      "<span>Worldwide: <b>167.7M</b> migrant workers in 2022, <b>4.7%</b> of the global labor force; <b>68%</b> work in high-income countries (ILO)</span>" +
+      "<span><b>" + Math.min(n, all.length) + "</b> of " + all.length + " flows drawn</span>";
+    else document.getElementById("stats").innerHTML =
+      "<span><b>" + fmt(total) + "</b> people from low- and middle-income countries living in " + dlabel + (sel ? " (" + names[sel] + " only)" : "") + " in " + year + "</span>" +
+      "<span>1990: <b>" + fmt(total0) + "</b></span>" +
+      "<span>Change: <b>" + (total0 ? (total >= total0 ? "+" : "") + Math.round((total / total0 - 1) * 100) + "%" : "n/a") + "</b></span>" +
+      "<span><b>" + Math.min(n, all.length) + "</b> of " + all.length + " country-to-country flows drawn</span>";
+
+    // Side table
+    document.getElementById("sidetitle").textContent = sel ? names[sel] + ": arrows in and out" : WM ? "Largest work migration flows, 2021" : "Largest flows in " + year;
+    document.getElementById("sidehint").textContent = sel ? "Click the country again, or a row, to change focus." : "Click a row or a country to focus on it.";
+    var rows = d3.select("#rows").selectAll("tr").data(all.slice(0, 60), function (f) { return f.o + ">" + f.d; });
+    rows.exit().remove();
+    var re = rows.enter().append("tr");
+    re.append("td"); re.append("td").attr("class", "n"); re.append("td").attr("class", "n");
+    re.on("click", function (ev, f) { selectCountry(f.d === sel ? f.o : f.d); });
+    re.merge(rows).order().each(function (f) {
+      var c = this.children;
+      c[0].innerHTML = "<span class='sw' style='background:" + COLORS[f.g] + "'></span> " + names[f.o] + "<span class='arrow'>→</span>" + names[f.d];
+      c[1].textContent = f.money ? money(f.v) : full(f.v);
+      c[2].textContent = f.money ? "" : f.v0 ? (f.v >= f.v0 ? "+" : "") + Math.round((f.v / f.v0 - 1) * 100) + "%" : "new";
+    });
+    landSel.classed("sel", function (f) { return f.properties.adm0_a3 === sel; });
+  }
+
+  function restyle() {
+    var rr = d3.scaleSqrt().domain([0, workMode() ? 1.5e11 : 4e7]).range([0, 26]);
+    destG.selectAll("g").select("text").style("font-size", (10 / k) + "px").attr("y", function (d) { return -rr(d.v) - 3 / k; });
+    labelG.selectAll("text").style("font-size", (10.5 / k) + "px");
+  }
+
+  function selectCountry(a) { sel = a; update(); }
+
+  function tipAt(ev, html) {
+    if (!tip) { tip = document.createElement("div"); tip.id = "tip"; mapEl.appendChild(tip); }
+    tip.innerHTML = html;
+    var r = mapEl.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    tip.style.left = Math.min(Math.max(8, x + 14), r.width - tip.offsetWidth - 8) + "px";
+    tip.style.top = (y - tip.offsetHeight - 12 < 8 ? y + 16 : y - tip.offsetHeight - 12) + "px";
+  }
+  function hideTip() { if (tip) { tip.remove(); tip = null; } }
+  function flowTip(ev, f) {
+    if (f.money) return tipAt(ev, "<b>" + names[f.o] + " → " + names[f.d] + "</b><br>Workers from " + names[f.o] + " in " + names[f.d] + " sent home <b>$" + (f.v / 1e9 >= 1 ? (f.v / 1e9).toFixed(2) + " billion" : Math.round(f.v / 1e6) + " million") + "</b> in 2021<br><span style='color:var(--muted)'>World Bank remittance estimate</span>");
+    tipAt(ev, "<b>" + names[f.o] + " → " + names[f.d] + "</b><br>" + full(f.v) + " people in " + year + "<br><span style='color:var(--muted)'>1990: " + full(f.v0) + "</span>");
+  }
+  function countryTip(ev, a) {
+    if (!D || !D.income[a]) return tipAt(ev, "<b>" + (names[a] || a) + "</b>");
+    var inc = { L: "Low income", LM: "Lower-middle income", UM: "Upper-middle income", H: "High income" }[D.income[a]];
+    var out = D.out[a] ? valAt(D.out[a], year) : 0, inn = D["in"][a] ? valAt(D["in"][a], year) : 0, dev = D.inDev[a] ? valAt(D.inDev[a], year) : 0;
+    tipAt(ev, "<b>" + names[a] + "</b> · " + inc + "<br>Born here, living abroad: <b>" + full(out) + "</b><br>Born abroad, living here: <b>" + full(inn) + "</b><br>&nbsp;of whom from low/middle-income countries: <b>" + full(dev) + "</b><br><span style='color:var(--muted)'>" + year + " · click to focus</span>");
+  }
+
+  // Controls
+  var yr = document.getElementById("year");
+  yr.addEventListener("input", function () { stop(); year = +yr.value; update(); });
+  ["gL", "gLM", "gUM", "dest", "topn", "mode"].forEach(function (id) { document.getElementById(id).addEventListener("change", update); });
+  var playing = false, timer = null, playBtn = document.getElementById("play");
+  function stop() { playing = false; clearInterval(timer); playBtn.textContent = "▶ Play"; }
+  playBtn.addEventListener("click", function () {
+    if (playing) return stop();
+    if (year >= 2024) year = 1990;
+    playing = true; playBtn.textContent = "❚❚ Pause";
+    timer = setInterval(function () { year++; yr.value = year; update(); if (year >= 2024) stop(); }, 260);
+  });
+})();
+</script>
+</body>
+</html>
